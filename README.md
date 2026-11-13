@@ -22,6 +22,25 @@ James, 2026-11-13: "This built in emerge. Interconnected." The engine is written
 interconnected. In Emerge, that is components with typed `in` and `out` hooks joined by `wire`s, and systems nested
 in systems (Nexus `emerge/emerge/tests/nesting.test.js`). The SISO surfaces stay the measure it is checked against.
 
+### Where it sits among his work
+
+| Piece | What it is | Its part here |
+|---|---|---|
+| **Emerge** (Nexus `emerge/`) | his language | what everything is written in |
+| **SISO / WARP** (`surfaces/siso-core-13.2.1`; Eravos `warp/`) | how events move. WARP is SISO renamed (Event → Cause, Gate → Drawbridge, Stream → Flow) plus Axiom, hard or soft | the measure |
+| **Wire** (Eravos `wire/`) | Component, Hook, Wire | the same as Emerge's components and wires |
+| **Eravos** (`HorrisEllis/Eravos`) | two people's worlds connected: "Everything has be requested, besides sending love, pokes, or needs. Nothing one way" · "Only if the two consent." | the first world-to-world rule, now in `bridge/two_worlds.eg` |
+| **ERAVOS canvas** (`HorrisEllis/Eravos-Canvas`, 3.186) | "a creative canvas to create creatively, and to connect with people"; component → tool → suite → project, one mechanism (wires) at every scale; v2 planned on Emerge + Looking Glass | the largest interconnected thing he has built; this repository is a place to prove Emerge before ERAVOS v2 stands on it |
+| **this repository** | where the laws are tested before anything stands on them; games first | the proving ground |
+
+### Two worlds, interconnected (`bridge/two_worlds.eg`)
+
+Fantasy and Starship are two Emerge compartments, each with one hard law: no technology into Fantasy, and no magic
+into Starship. Between them is Eravos's rule. Love, pokes and needs cross at once. Anything else waits behind a
+request wall until the other side says yes or no. A world's law cannot be consented away: a laser that Fantasy
+agreed to take is still refused. Every crossing and refusal is in the hash-chained ledger, and `ledger_verify()`
+holds. 7 tests. Removing the law fails 1 of them, and removing the request wall fails 3.
+
 Companion: [`ATLAS.md`](ATLAS.md), the system atlas, written on Idearium's atlas template
 (Nexus `idearium/spec-engine/templates/atlas-template.md`).
 
@@ -53,6 +72,7 @@ contrainterated/
   ATLAS.md                        the system atlas (Idearium template)
   bridge/
     inventory_guard.eg            the first piece of the game engine in Emerge, with its tests
+    two_worlds.eg                 two interconnected worlds, each with its own law, and Eravos's consent rule between them
   surfaces/
     siso-core-13.2.1/             the SISO core: Lua reference + JavaScript, PHP, Python ports, one fixture suite
     game-master-5.2.0/            an AI-narrated text adventure engine built on SISO core 13.1.0 (PHP server, JS client)
@@ -112,6 +132,7 @@ line, summed.
 | core, Lua (the reference) | `cd lua && lua5.4 sisoTests/<name>.test.lua` | **not run**: Lua 5.4 is not installed in this container and could not be installed here |
 | game master | `php run_tests.php` | **all 10 suites passed**: vendored core PHP 371/371, JS 376/376, fixtures 92/92 steps in each of PHP and JS, vendor pin 6/6, server census 37/37, client census 7/7, client scenarios 9/9, templates 4/4, scenarios 18/18 |
 | bridge | `eg test bridge/inventory_guard.eg` (Emerge 1.13.0, Nexus 0.60.514) | **8/8** passed |
+| two worlds | `eg test bridge/two_worlds.eg` | **7/7** passed; with Fantasy's law removed 6/7, with the request wall removed 4/7 (the tests can fail) |
 | bridge vs PHP | the same 9 inventory cases through `StateUpdateGate::applyInventoryChange` by reflection | **9/9 equal** |
 
 Not run: the game master's optional `tests/browser.e2e.mjs` (Playwright). Nexus tests UI in Clear Glass, never

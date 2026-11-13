@@ -1,0 +1,104 @@
+// bridge/two_worlds.eg — two worlds, interconnected, each with its own laws. The smallest proof of the idea.
+// James, 2026-11-13: "This built in emerge. Interconnected." · "I'm am the creative direction."
+// The crossing rule is Eravos's (HorrisEllis/Eravos, Eravos.md): "Everything has be requested, besides sending love, pokes, or
+// needs. Nothing one way" · "Only if the two consent."
+//
+//   offer   a world offers something to the other. love, poke and need cross at once; anything else waits for the
+//           other side's yes (a request wall).
+//   accept  the other side says yes; only then does it cross.
+//   decline the other side says no; nothing crosses.
+// Each world keeps its own hard law. Fantasy refuses technology, whatever was agreed: a law cannot be consented away.
+// Every crossing, refusal and law broken lands in the hash-chained ledger: the admin log that cannot be faked.
+// Run:  node <nexus>/emerge/emerge/lang/eg.js test bridge/two_worlds.eg
+
+let FREE = ["love", "poke", "need"]
+fn _free(kind) = index_of(FREE, kind) >= 0
+
+compartment Fantasy {
+  id = "world.fantasy"
+  intent = "a world of swords and spells; no technology crosses in"
+  state { held: [], waiting: [] }
+
+  constraint no_technology hard { all(state.held, fn(x) = get(x, "tech", false) != true) }
+
+  on "to_fantasy" (ev) {
+    if _free(ev.kind) or get(ev, "agreed", false) == true { state.held = push(state.held, ev) }
+    else { state.waiting = push(state.waiting, ev) }
+  }
+  on "fantasy_accepts" (ev) {
+    let item = find(state.waiting, fn(x) = x.id == ev.id)
+    state.waiting = filter(state.waiting, fn(x) = x.id != ev.id)
+    if item != null { state.held = push(state.held, item) }
+  }
+  on "fantasy_declines" (ev) { state.waiting = filter(state.waiting, fn(x) = x.id != ev.id) }
+}
+
+compartment Starship {
+  id = "world.starship"
+  intent = "a world of ships and lasers; magic does not work here"
+  state { held: [], waiting: [] }
+
+  constraint no_magic hard { all(state.held, fn(x) = get(x, "magic", false) != true) }
+
+  on "to_starship" (ev) {
+    if _free(ev.kind) or get(ev, "agreed", false) == true { state.held = push(state.held, ev) }
+    else { state.waiting = push(state.waiting, ev) }
+  }
+  on "starship_accepts" (ev) {
+    let item = find(state.waiting, fn(x) = x.id == ev.id)
+    state.waiting = filter(state.waiting, fn(x) = x.id != ev.id)
+    if item != null { state.held = push(state.held, item) }
+  }
+  on "starship_declines" (ev) { state.waiting = filter(state.waiting, fn(x) = x.id != ev.id) }
+}
+
+fn _ids(xs) = map(xs, fn(x) = x.id)
+fn _kinds_in_ledger(k) = map(filter(ledger(), fn(e) = e.kind == k), fn(e) = e.body.signal)
+
+test "love and pokes cross at once: no wall" {
+  emit "to_starship" { id: "l1", kind: "love" }
+  emit "to_fantasy" { id: "p1", kind: "poke" }
+  expect _ids(Starship.state.held) == ["l1"]
+  expect _ids(Fantasy.state.held) == ["p1"]
+}
+
+test "anything else waits behind the request wall" {
+  emit "to_fantasy" { id: "map1", kind: "item", name: "star map" }
+  expect _ids(Fantasy.state.waiting) == ["map1"]
+  expect _ids(Fantasy.state.held) == []
+}
+
+test "it crosses only when the other side says yes" {
+  emit "to_fantasy" { id: "map2", kind: "item", name: "star map" }
+  emit "fantasy_accepts" { id: "map2" }
+  expect _ids(Fantasy.state.held) == ["map2"]
+  expect _ids(Fantasy.state.waiting) == []
+}
+
+test "a no means nothing crosses" {
+  emit "to_starship" { id: "song", kind: "item", name: "a bard's song" }
+  emit "starship_declines" { id: "song" }
+  expect Starship.state.held == []
+  expect Starship.state.waiting == []
+}
+
+test "a world's law cannot be consented away" {
+  emit "to_fantasy" { id: "laser", kind: "item", name: "laser pistol", tech: true }
+  emit "fantasy_accepts" { id: "laser" }
+  expect _ids(Fantasy.state.held) == []
+  expect _kinds_in_ledger("rejected") == ["fantasy_accepts"]
+}
+
+test "the other world's law holds the other way" {
+  emit "to_starship" { id: "wand", kind: "item", name: "wand", magic: true, agreed: true }
+  expect Starship.state.held == []
+  expect _kinds_in_ledger("rejected") == ["to_starship"]
+}
+
+test "every crossing is in the ledger, and the ledger checks out" {
+  emit "to_starship" { id: "n1", kind: "need", text: "call me tonight" }
+  emit "to_fantasy" { id: "sword", kind: "item", name: "sword" }
+  emit "fantasy_accepts" { id: "sword" }
+  expect len(_kinds_in_ledger("transition")) == 3
+  expect ledger_verify() == true
+}
