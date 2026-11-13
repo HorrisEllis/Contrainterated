@@ -18,6 +18,10 @@ the admin log that cannot be faked. Players, and the AI, only send signals that 
 game master, the AI proposes and the inventory guard refuses what does not exist. Games are the first kind of world;
 the direction of what comes next is his.
 
+James, 2026-11-13: "This built in emerge. Interconnected." The engine is written in Emerge, and its parts are
+interconnected. In Emerge, that is components with typed `in` and `out` hooks joined by `wire`s, and systems nested
+in systems (Nexus `emerge/emerge/tests/nesting.test.js`). The SISO surfaces stay the measure it is checked against.
+
 Companion: [`ATLAS.md`](ATLAS.md), the system atlas, written on Idearium's atlas template
 (Nexus `idearium/spec-engine/templates/atlas-template.md`).
 
