@@ -7,6 +7,17 @@ fully tested SISO code bases that an Emerge game engine has to match, layer by l
 > name though"). Candidates and their reasons are in [Naming](#naming). Renaming is a GitHub setting
 > (Settings → General → Repository name); GitHub redirects the old URL.
 
+## Creative direction
+
+James, 2026-11-13: "I'm am the creative direction." · "My mentor gave it to me he said it'd be like when I used to,
+like when I was an admin on the game servers that I used to run with my brother. So I'm like an overseer or something".
+
+He is the admin of the world, not a player in it: he sets the rules, and the world cannot cheat them. Emerge already
+has that seat. Each world is a compartment, its rules are hard and soft constraints, and the hash-chained ledger is
+the admin log that cannot be faked. Players, and the AI, only send signals that the rules accept or refuse. In the
+game master, the AI proposes and the inventory guard refuses what does not exist. Games are the first kind of world;
+the direction of what comes next is his.
+
 Companion: [`ATLAS.md`](ATLAS.md), the system atlas, written on Idearium's atlas template
 (Nexus `idearium/spec-engine/templates/atlas-template.md`).
 
