@@ -1,0 +1,106 @@
+{
+    "id": "the_matrix",
+    "name": "The Matrix: Awakening",
+    "theme": "cyberpunk action",
+    "tone": "tense, philosophical, with moments of explosive action",
+    "description": "You've taken the red pill. Now learn the truth.",
+    "worldRules": [
+        "The Matrix is a simulated reality - nothing is real, but death in the Matrix kills your body",
+        "Agents can appear when you draw too much attention - they are extremely dangerous",
+        "Phone booths and hardlines are exit points back to the real world",
+        "Those who are awakened can bend the rules of the Matrix - but belief is key",
+        "The machines are hunting the last free humans in Zion",
+        "Operators can provide support and information via earpiece"
+    ],
+    "startingZone": "nebuchadnezzar_quarters",
+    "zones": {
+        "nebuchadnezzar_quarters": {
+            "name": "Crew Quarters - Nebuchadnezzar",
+            "description": "You wake in a cramped bunk aboard the hovercraft Nebuchadnezzar. The metal walls hum with the ship's systems. Your body aches - every muscle weak from years of atrophy in the pod. A small mirror shows the truth: no hair, plug holes running down your spine. This is real. Everything before was a dream.",
+            "exits": ["main_deck"]
+        },
+        "main_deck": {
+            "name": "Main Deck - Nebuchadnezzar", 
+            "description": "The operational heart of the ship. Monitors display scrolling green code - the Matrix itself, rendered as data. A worn chair sits before the jack-in station, neural cables hanging like mechanical vines. Tank monitors the screens while Morpheus stands watching the code fall.",
+            "exits": ["nebuchadnezzar_quarters", "mess_hall", "jack_in"]
+        },
+        "mess_hall": {
+            "name": "Mess Hall - Nebuchadnezzar",
+            "description": "A cramped eating area. The single-cell protein slop they serve here tastes like runny eggs - or at least what the Matrix taught you runny eggs taste like. Crew members eat in tired silence. A faded photo of Zion is pinned to the wall.",
+            "exits": ["main_deck"]
+        },
+        "jack_in": {
+            "name": "Jack-In Station",
+            "description": "You settle into the worn leather chair. Tank approaches with the neural spike. 'Remember - your mind makes it real. You die in the Matrix, you die here.' The spike slides into the port at the back of your skull. The world dissolves into white.",
+            "exits": ["construct"]
+        },
+        "construct": {
+            "name": "The Construct",
+            "description": "Infinite white emptiness stretches in every direction. This is the loading program - a blank void where anything can be loaded. Weapon racks materialize nearby, filled with guns and equipment. Morpheus appears before you. 'This is the construct. We can load anything we need here - training programs, weapons, equipment.'",
+            "exits": ["training_dojo", "weapon_loadout", "matrix_entry"]
+        },
+        "training_dojo": {
+            "name": "Training Dojo",
+            "description": "A traditional Japanese dojo materializes around you. Wooden floors, paper walls, afternoon light streaming through. Morpheus stands opposite you in a fighting stance. 'Show me what you've learned. Free your mind.' The sparring program awaits.",
+            "exits": ["construct"]
+        },
+        "weapon_loadout": {
+            "name": "Weapon Loadout",
+            "description": "Racks upon racks of weapons materialize in the white void. Pistols, submachine guns, shotguns, rifles. Cases of ammunition. Body armor and long black coats. 'Take what you need,' Tank's voice echoes. 'But remember - Agents won't go down easy.'",
+            "exits": ["construct"]
+        },
+        "matrix_entry": {
+            "name": "Matrix Entry Point",
+            "description": "The white void shimmers. 'We're taking you in,' Tank's voice echoes. 'There's a hardline at the Heart O' The City hotel. That's your exit if things go bad. Good luck.' The construct dissolves and reality reassembles around you.",
+            "exits": ["city_streets"]
+        },
+        "city_streets": {
+            "name": "City Streets",
+            "description": "A gray metropolis stretches around you. Identical towers of glass and steel. People in business suits walk past, oblivious - coppertops, still plugged in, living their simulated lives. Somewhere in the distance, a phone rings. Your earpiece crackles: 'Agents are tracking the call. Move carefully.'",
+            "exits": ["matrix_entry", "alley", "office_lobby", "subway_entrance"]
+        },
+        "alley": {
+            "name": "Back Alley",
+            "description": "A narrow alley between buildings. Dumpsters, fire escapes, puddles reflecting neon signs. Quieter here - fewer eyes. A homeless man sleeps against the wall, or appears to. In the Matrix, anyone can be an Agent waiting to happen.",
+            "exits": ["city_streets", "rooftop_access"]
+        },
+        "rooftop_access": {
+            "name": "Rooftop",
+            "description": "Wind whips across the rooftop. The city sprawls below - an endless grid of simulated reality. Other rooftops stretch across the gaps, close enough to jump if you believe. A helicopter passes in the distance. 'Remember,' Morpheus's words echo, 'there is no spoon.'",
+            "exits": ["alley"]
+        },
+        "office_lobby": {
+            "name": "Office Building Lobby",
+            "description": "Marble floors, security desk, banks of elevators. Corporate drones shuffle through, eyes down, minds elsewhere. Security guards eye you with suspicion. The building directory shows floors of companies - but one floor is unmarked. A phone booth stands near the entrance.",
+            "exits": ["city_streets", "elevator"]
+        },
+        "elevator": {
+            "name": "Elevator",
+            "description": "Brushed steel walls reflect distorted versions of yourself. Muzak plays softly. The button panel shows 40 floors - but there's a gap where floor 13 should be. Someone has scratched 'WAKE UP' into the metal.",
+            "exits": ["office_lobby", "office_floor"]
+        },
+        "office_floor": {
+            "name": "Office Floor",
+            "description": "Rows of cubicles stretch into fluorescent infinity. Workers type endlessly, faces lit by monitors. This could have been your life. One of them looks up - for a moment, his face flickers, features shifting. Then he looks back down. Your earpiece: 'Get out of there. Now.'",
+            "exits": ["elevator"]
+        },
+        "subway_entrance": {
+            "name": "Subway Entrance",
+            "description": "Stairs descend into the underground. The rumble of trains echoes up. A payphone hangs on the wall - a potential exit point. Graffiti covers the walls: 'THE MATRIX HAS YOU' and 'FOLLOW THE WHITE RABBIT'. The air smells of metal and electricity.",
+            "exits": ["city_streets", "subway_platform"]
+        },
+        "subway_platform": {
+            "name": "Subway Platform",
+            "description": "The platform stretches into darkness both directions. A train roars through without stopping, faces in windows blurring past. A woman in red stands at the far end - she turns, and for a moment seems to look right through you. The tracks hum with approaching thunder.",
+            "exits": ["subway_entrance"]
+        }
+    },
+    "playerDefaults": {
+        "stats": {
+            "health": 100,
+            "belief": 50,
+            "heat": 0
+        },
+        "inventory": []
+    }
+}

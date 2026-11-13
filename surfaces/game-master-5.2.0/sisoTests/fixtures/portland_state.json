@@ -1,0 +1,4 @@
+{"gameId":"p1","worldTemplateId":"portland_scavenger","currentZone":"pioneer_square","turnCount":1,
+ "player":{"name":"Sam","inventory":["crumpled_note"],"stats":{"money":3,"landmarks_found":1}},
+ "worldState":{"time":"07:40","date":"October 15","landmarks_visited":["powells"],"globalFlags":{}},
+ "profile":{"actionHistory":[{"turn":1,"action":"read the note"}],"observations":[]}}

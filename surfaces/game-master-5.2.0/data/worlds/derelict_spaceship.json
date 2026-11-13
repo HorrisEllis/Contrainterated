@@ -1,0 +1,35 @@
+{
+    "id": "derelict_spaceship",
+    "name": "Derelict Spaceship",
+    "theme": "sci-fi horror",
+    "tone": "tense and mysterious",
+    "worldRules": [
+        "The ship has been adrift for 50 years",
+        "Power is limited and unreliable",
+        "Some areas are exposed to vacuum",
+        "The AI system is partially functional"
+    ],
+    "startingZone": "airlock",
+    "zones": {
+        "airlock": {
+            "name": "Airlock Chamber",
+            "description": "A cramped airlock with flickering emergency lights. Your EVA suit's helmet display shows the atmosphere is breathable but stale.",
+            "exits": ["corridor_a"]
+        },
+        "corridor_a": {
+            "name": "Main Corridor A",
+            "description": "A long corridor stretches into darkness. Debris floats in the low gravity. Emergency signs point to various sections.",
+            "exits": ["airlock", "command_center", "cargo_bay"]
+        },
+        "command_center": {
+            "name": "Command Center",
+            "description": "The bridge of the vessel. Consoles flicker with residual power. A large viewport shows the endless void of space.",
+            "exits": ["corridor_a"]
+        },
+        "cargo_bay": {
+            "name": "Cargo Bay",
+            "description": "A massive cargo hold filled with crates and containers. Some have been torn open. Strange markings cover the walls.",
+            "exits": ["corridor_a"]
+        }
+    }
+}

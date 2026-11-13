@@ -1,0 +1,76 @@
+{
+  "format": 1,
+  "name": "an event no gate claims, mistyped or not, settles as residue like any answer",
+  "covers": [
+    "K6",
+    "Rule 4"
+  ],
+  "gates": [
+    {
+      "signature": "a",
+      "does": {
+        "emitOne": {
+          "type": "tpyo",
+          "data": {
+            "v": 2
+          }
+        }
+      }
+    }
+  ],
+  "steps": [
+    {
+      "emit": {
+        "type": "unknown",
+        "data": {
+          "v": 1
+        }
+      },
+      "expect": {
+        "settled": true,
+        "trace": [
+          {
+            "type": "unknown",
+            "claimed": false
+          }
+        ]
+      }
+    },
+    {
+      "emit": {
+        "type": "a"
+      },
+      "expect": {
+        "settled": true,
+        "trace": [
+          {
+            "type": "a",
+            "claimed": true,
+            "then": [
+              {
+                "type": "tpyo",
+                "claimed": false
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "take": [
+        {
+          "type": "tpyo",
+          "data": {
+            "v": 2
+          }
+        },
+        {
+          "type": "unknown",
+          "data": {
+            "v": 1
+          }
+        }
+      ]
+    }
+  ]
+}

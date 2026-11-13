@@ -1,0 +1,162 @@
+{
+  "format": 1,
+  "name": "a cycle of length 2 is rejected at the first claimed delivery deeper than the gate count, read from the present",
+  "covers": [
+    "Rule 3",
+    "K4",
+    "K5"
+  ],
+  "gates": [
+    {
+      "signature": "a",
+      "does": {
+        "emitOne": {
+          "type": "b"
+        }
+      }
+    },
+    {
+      "signature": "b",
+      "does": {
+        "emitOne": {
+          "type": "a"
+        }
+      }
+    }
+  ],
+  "steps": [
+    {
+      "emit": {
+        "type": "a"
+      },
+      "expect": {
+        "rejected": {
+          "code": "SISO_CYCLE",
+          "eventType": "a",
+          "depth": 3,
+          "at": [
+            "a",
+            "b",
+            "a"
+          ]
+        },
+        "trace": [
+          {
+            "type": "a",
+            "claimed": true,
+            "then": [
+              {
+                "type": "b",
+                "claimed": true,
+                "then": [
+                  {
+                    "type": "a",
+                    "claimed": true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "emit": {
+        "type": "b"
+      },
+      "expect": {
+        "rejected": {
+          "code": "SISO_CYCLE",
+          "eventType": "b",
+          "depth": 3,
+          "at": [
+            "b",
+            "a",
+            "b"
+          ]
+        }
+      }
+    },
+    {
+      "register": {
+        "signature": "z",
+        "does": {
+          "nothing": true
+        }
+      },
+      "refused": false
+    },
+    {
+      "emit": {
+        "type": "a"
+      },
+      "expect": {
+        "rejected": {
+          "code": "SISO_CYCLE",
+          "eventType": "b",
+          "depth": 4,
+          "at": [
+            "a",
+            "b",
+            "a",
+            "b"
+          ]
+        },
+        "trace": [
+          {
+            "type": "a",
+            "claimed": true,
+            "then": [
+              {
+                "type": "b",
+                "claimed": true,
+                "then": [
+                  {
+                    "type": "a",
+                    "claimed": true,
+                    "then": [
+                      {
+                        "type": "b",
+                        "claimed": true
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "emit": {
+        "type": "z"
+      },
+      "expect": {
+        "settled": true,
+        "trace": [
+          {
+            "type": "z",
+            "claimed": true
+          }
+        ]
+      }
+    },
+    {
+      "emit": {
+        "type": "kept"
+      },
+      "expect": "settled"
+    },
+    {
+      "sample": {
+        "residue": [
+          {
+            "type": "kept"
+          }
+        ],
+        "gateCount": 3
+      }
+    }
+  ]
+}

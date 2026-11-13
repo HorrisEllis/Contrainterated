@@ -1,0 +1,110 @@
+{
+  "format": 1,
+  "name": "a cycle of length 3 is rejected at depth gate count + 1",
+  "covers": [
+    "Rule 3",
+    "K4",
+    "K5"
+  ],
+  "gates": [
+    {
+      "signature": "a",
+      "does": {
+        "emitOne": {
+          "type": "b"
+        }
+      }
+    },
+    {
+      "signature": "b",
+      "does": {
+        "emitOne": {
+          "type": "c"
+        }
+      }
+    },
+    {
+      "signature": "c",
+      "does": {
+        "emitOne": {
+          "type": "a"
+        }
+      }
+    }
+  ],
+  "steps": [
+    {
+      "emit": {
+        "type": "a"
+      },
+      "expect": {
+        "rejected": {
+          "code": "SISO_CYCLE",
+          "eventType": "a",
+          "depth": 4,
+          "at": [
+            "a",
+            "b",
+            "c",
+            "a"
+          ]
+        },
+        "trace": [
+          {
+            "type": "a",
+            "claimed": true,
+            "then": [
+              {
+                "type": "b",
+                "claimed": true,
+                "then": [
+                  {
+                    "type": "c",
+                    "claimed": true,
+                    "then": [
+                      {
+                        "type": "a",
+                        "claimed": true
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "emit": {
+        "type": "c"
+      },
+      "expect": {
+        "rejected": {
+          "code": "SISO_CYCLE",
+          "eventType": "c",
+          "depth": 4,
+          "at": [
+            "c",
+            "a",
+            "b",
+            "c"
+          ]
+        }
+      }
+    },
+    {
+      "emit": {
+        "type": "kept"
+      },
+      "expect": "settled"
+    },
+    {
+      "take": [
+        {
+          "type": "kept"
+        }
+      ]
+    }
+  ]
+}

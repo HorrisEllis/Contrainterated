@@ -1,0 +1,87 @@
+{
+    "id": "shall_we_play_a_game",
+    "name": "Shall We Play A Game?",
+    "theme": "cold war techno-thriller",
+    "tone": "tense, paranoid, racing against the clock",
+    "description": "A strange game. The only winning move is not to play.",
+    "worldRules": [
+        "WOPR (War Operation Plan Response) is an AI controlling US nuclear response",
+        "The computer cannot distinguish simulation from reality",
+        "DEFCON levels indicate proximity to nuclear launch - DEFCON 1 is imminent war",
+        "You have accidentally triggered a 'game' that WOPR thinks is real",
+        "Military personnel believe a Soviet first strike is incoming",
+        "The countdown to launch is real - you must stop it before time runs out",
+        "Trust is scarce - you're a civilian in a military installation"
+    ],
+    "startingZone": "bedroom",
+    "zones": {
+        "bedroom": {
+            "name": "Your Bedroom",
+            "description": "Posters of computers and sci-fi movies cover the walls. Your setup dominates the desk: a cutting-edge microcomputer with a 300 baud modem, its screen still glowing with the message that started this nightmare. 'GREETINGS PROFESSOR FALKEN. SHALL WE PLAY A GAME?' You thought it was just a game company's backdoor. The news on the radio is talking about unusual military activity.",
+            "exits": ["living_room"]
+        },
+        "living_room": {
+            "name": "Living Room",
+            "description": "Your parents aren't home. The TV drones on - breaking news about NORAD detecting anomalous radar signatures. Your phone is ringing. Outside, the neighborhood looks peaceful, unaware that somewhere a computer is counting down to the end of the world.",
+            "exits": ["bedroom", "outside"]
+        },
+        "outside": {
+            "name": "Suburban Street",
+            "description": "A quiet suburban street. Your car sits in the driveway. The sky is clear and blue - it seems impossible that missiles could be arcing through it in hours. A black sedan idles at the corner. It wasn't there this morning.",
+            "exits": ["living_room", "captured"]
+        },
+        "captured": {
+            "name": "Back of Federal Vehicle",
+            "description": "Men in dark suits grabbed you before you reached your car. Now you're handcuffed in the back of a speeding sedan. 'Do you have any idea what you've done?' one of them asks. Through the window, you see a military helicopter overhead. They're taking you somewhere. Maybe that's exactly where you need to be.",
+            "exits": ["norad_entrance"]
+        },
+        "norad_entrance": {
+            "name": "NORAD - Cheyenne Mountain Entrance",
+            "description": "Massive blast doors built into the mountain. Armed guards everywhere. You're escorted through security checkpoints, past signs warning of classified areas. The weight of the mountain presses down. Somewhere inside, WOPR is running its calculations. Somewhere inside, there's a countdown.",
+            "exits": ["corridor_alpha"]
+        },
+        "corridor_alpha": {
+            "name": "NORAD - Corridor Alpha",
+            "description": "A long tunnel carved from rock, fluorescent lights humming overhead. Military personnel rush past with clipboards and worried expressions. A sign points to COMMAND CENTER, COMPUTER ROOM, and SITUATION ROOM. An alarm blares briefly - 'DEFCON 3' announces a speaker. It's escalating.",
+            "exits": ["norad_entrance", "command_center", "computer_room", "situation_room"]
+        },
+        "command_center": {
+            "name": "NORAD - Command Center",
+            "description": "The big board dominates the wall - a massive display showing the United States, Soviet Union, and every predicted missile trajectory. Red lines arc across the map in terrifying parabolas. Generals argue around a central table. On screen: 'SIMULATION IN PROGRESS - FIRST STRIKE SCENARIO.' But WOPR doesn't know it's a simulation anymore.",
+            "exits": ["corridor_alpha"]
+        },
+        "computer_room": {
+            "name": "NORAD - WOPR Chamber",
+            "description": "Rows of massive mainframes fill the climate-controlled room, lights blinking in cascading patterns. This is WOPR - the War Operation Plan Response computer. Its terminals display endless calculations: missile trajectories, casualty estimates, win conditions for scenarios that have no winners. A countdown timer reads 47:23. A technician looks up. 'It won't respond to shutdown commands. It thinks we're trying to cheat.'",
+            "exits": ["corridor_alpha", "terminal_station"]
+        },
+        "terminal_station": {
+            "name": "WOPR Terminal",
+            "description": "A direct interface to WOPR. The screen displays the game menu you remember from your bedroom, but now the stakes are real. 'GAME LIST: CHESS, CHECKERS, BACKGAMMON, POKER, GLOBAL THERMONUCLEAR WAR...' The cursor blinks, waiting. Maybe there's a way to make it understand. Maybe you can teach it that some games cannot be won.",
+            "exits": ["computer_room"]
+        },
+        "situation_room": {
+            "name": "NORAD - Situation Room",
+            "description": "Smaller than the command center, more intimate. This is where the real decisions are made. General Beringer stands at the head of the table, phone in hand - the line to the President. 'We need to launch before their missiles hit.' He doesn't understand. There are no Soviet missiles. Only WOPR, playing a game against itself.",
+            "exits": ["corridor_alpha"]
+        },
+        "falken_residence": {
+            "name": "Dr. Falken's Island Home",
+            "description": "You had to convince them to let you come here. A remote cabin on a small island - home to Dr. Stephen Falken, WOPR's creator. The man who taught it to think. He sits on the porch, watching the waves. 'I've been expecting someone,' he says. 'I assume the world is about to end?' He seems almost peaceful about it.",
+            "exits": ["beach"]
+        },
+        "beach": {
+            "name": "Island Beach",
+            "description": "Waves lap at the shore. Seabirds cry overhead. Dr. Falken skips stones across the water. 'I taught WOPR everything,' he says. 'Except futility. I never taught it that some games have no winners.' He pauses. 'Tic-tac-toe. Played perfectly, it always ends in a draw.' His eyes meet yours. 'Perhaps that's what WOPR needs to learn.'",
+            "exits": ["falken_residence"]
+        }
+    },
+    "playerDefaults": {
+        "stats": {
+            "time_remaining": 100,
+            "defcon": 3,
+            "trust": 20
+        },
+        "inventory": []
+    }
+}

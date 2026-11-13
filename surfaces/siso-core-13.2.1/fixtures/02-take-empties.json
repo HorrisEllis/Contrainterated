@@ -1,0 +1,107 @@
+{
+  "format": 1,
+  "name": "take empties the stream: later residue holds only new arrivals",
+  "covers": [
+    "Rule 4",
+    "The outside"
+  ],
+  "gates": [
+    {
+      "signature": "a",
+      "does": {
+        "forward": "b"
+      }
+    }
+  ],
+  "steps": [
+    {
+      "emit": {
+        "type": "a",
+        "data": {
+          "v": 1
+        }
+      },
+      "expect": "settled"
+    },
+    {
+      "take": [
+        {
+          "type": "b",
+          "data": {
+            "v": 1
+          }
+        }
+      ]
+    },
+    {
+      "emit": {
+        "type": "c",
+        "data": {
+          "v": 2
+        }
+      },
+      "expect": "settled"
+    },
+    {
+      "take": [
+        {
+          "type": "c",
+          "data": {
+            "v": 2
+          }
+        }
+      ]
+    },
+    {
+      "emit": {
+        "type": "a",
+        "data": {
+          "v": 3
+        }
+      },
+      "expect": "settled"
+    },
+    {
+      "sample": {
+        "residue": [
+          {
+            "type": "b",
+            "data": {
+              "v": 3
+            }
+          }
+        ],
+        "gateCount": 1
+      }
+    },
+    {
+      "take": [
+        {
+          "type": "b",
+          "data": {
+            "v": 3
+          }
+        }
+      ]
+    },
+    {
+      "emit": {
+        "type": "a",
+        "data": {
+          "v": 4
+        }
+      },
+      "expect": "settled"
+    },
+    {
+      "take": [
+        {
+          "type": "b",
+          "data": {
+            "v": 4
+          }
+        }
+      ]
+    }
+  ]
+}

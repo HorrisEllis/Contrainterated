@@ -1,0 +1,132 @@
+{
+  "format": 1,
+  "name": "a sample reads the present without removing it, and carries the gate count",
+  "covers": [
+    "Rule 4",
+    "The outside",
+    "K2"
+  ],
+  "gates": [
+    {
+      "signature": "a",
+      "does": {
+        "forward": "b"
+      }
+    },
+    {
+      "signature": "c",
+      "does": {
+        "forward": "d"
+      }
+    }
+  ],
+  "steps": [
+    {
+      "emit": {
+        "type": "a",
+        "data": {
+          "n": 1
+        }
+      },
+      "expect": "settled"
+    },
+    {
+      "sample": {
+        "residue": [
+          {
+            "type": "b",
+            "data": {
+              "n": 1
+            }
+          }
+        ],
+        "gateCount": 2
+      }
+    },
+    {
+      "sample": {
+        "residue": [
+          {
+            "type": "b",
+            "data": {
+              "n": 1
+            }
+          }
+        ],
+        "gateCount": 2
+      }
+    },
+    {
+      "emit": {
+        "type": "c",
+        "data": {
+          "n": 2
+        }
+      },
+      "expect": "settled"
+    },
+    {
+      "sample": {
+        "residue": [
+          {
+            "type": "d",
+            "data": {
+              "n": 2
+            }
+          },
+          {
+            "type": "b",
+            "data": {
+              "n": 1
+            }
+          }
+        ],
+        "gateCount": 2
+      }
+    },
+    {
+      "register": {
+        "signature": "e",
+        "does": {
+          "nothing": true
+        }
+      },
+      "refused": false
+    },
+    {
+      "sample": {
+        "residue": [
+          {
+            "type": "b",
+            "data": {
+              "n": 1
+            }
+          },
+          {
+            "type": "d",
+            "data": {
+              "n": 2
+            }
+          }
+        ],
+        "gateCount": 3
+      }
+    },
+    {
+      "take": [
+        {
+          "type": "d",
+          "data": {
+            "n": 2
+          }
+        },
+        {
+          "type": "b",
+          "data": {
+            "n": 1
+          }
+        }
+      ]
+    }
+  ]
+}

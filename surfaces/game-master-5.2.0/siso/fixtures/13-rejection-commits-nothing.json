@@ -1,0 +1,170 @@
+{
+  "format": 1,
+  "name": "a rejected propagation commits no residue, even what settled before the failure, and the stream stays usable",
+  "covers": [
+    "K5",
+    "Rule 4",
+    "Rule 3"
+  ],
+  "gates": [
+    {
+      "signature": "a",
+      "does": {
+        "emit": [
+          {
+            "type": "partial",
+            "data": {
+              "n": 1
+            }
+          },
+          {
+            "type": "b"
+          }
+        ]
+      }
+    },
+    {
+      "signature": "b",
+      "does": {
+        "throw": "late failure"
+      }
+    },
+    {
+      "signature": "c",
+      "does": {
+        "emit": [
+          {
+            "type": "partial",
+            "data": {
+              "n": 2
+            }
+          },
+          {
+            "type": "d"
+          }
+        ]
+      }
+    },
+    {
+      "signature": "d",
+      "does": {
+        "emitOne": {
+          "type": "c"
+        }
+      }
+    }
+  ],
+  "steps": [
+    {
+      "emit": {
+        "type": "kept",
+        "data": {
+          "n": 0
+        }
+      },
+      "expect": "settled"
+    },
+    {
+      "emit": {
+        "type": "a"
+      },
+      "expect": {
+        "rejected": {
+          "code": "SISO_GATE_THREW",
+          "eventType": "b",
+          "cause": "late failure",
+          "at": [
+            "a",
+            "b"
+          ]
+        }
+      }
+    },
+    {
+      "sample": {
+        "residue": [
+          {
+            "type": "kept",
+            "data": {
+              "n": 0
+            }
+          }
+        ],
+        "gateCount": 4
+      }
+    },
+    {
+      "emit": {
+        "type": "c"
+      },
+      "expect": {
+        "rejected": {
+          "code": "SISO_CYCLE",
+          "eventType": "c",
+          "depth": 5,
+          "at": [
+            "c",
+            "d",
+            "c",
+            "d",
+            "c"
+          ]
+        }
+      }
+    },
+    {
+      "sample": {
+        "residue": [
+          {
+            "type": "kept",
+            "data": {
+              "n": 0
+            }
+          }
+        ],
+        "gateCount": 4
+      }
+    },
+    {
+      "emit": {
+        "type": "a"
+      },
+      "expect": {
+        "rejected": {
+          "code": "SISO_GATE_THREW",
+          "eventType": "b",
+          "cause": "late failure",
+          "at": [
+            "a",
+            "b"
+          ]
+        }
+      }
+    },
+    {
+      "emit": {
+        "type": "fine",
+        "data": {
+          "n": 3
+        }
+      },
+      "expect": "settled"
+    },
+    {
+      "take": [
+        {
+          "type": "fine",
+          "data": {
+            "n": 3
+          }
+        },
+        {
+          "type": "kept",
+          "data": {
+            "n": 0
+          }
+        }
+      ]
+    }
+  ]
+}

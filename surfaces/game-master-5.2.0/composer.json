@@ -1,0 +1,23 @@
+{
+    "name": "gamemaster/ai-game-master",
+    "description": "AI Game Master - Text adventure powered by SISO (SISO core 13.1.0, vendored in siso/ for PHP and JavaScript)",
+    "type": "project",
+    "require": {
+        "php": ">=8.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "GameMaster\\": "src/"
+        },
+        "files": [
+            "siso/php/code/core/event.php",
+            "siso/php/code/core/gate.php",
+            "siso/php/code/core/rejection.php",
+            "siso/php/code/core/stream.php",
+            "siso/php/code/observer/streamlog.php"
+        ]
+    },
+    "scripts": {
+        "test": "php run_tests.php"
+    }
+}

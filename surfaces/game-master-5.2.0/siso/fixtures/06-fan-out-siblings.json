@@ -1,0 +1,189 @@
+{
+  "format": 1,
+  "name": "fan-out is legal, and the same type may appear in sibling branches",
+  "covers": [
+    "Rule 3",
+    "Rule 2",
+    "K1"
+  ],
+  "gates": [
+    {
+      "signature": "root",
+      "does": {
+        "emit": [
+          {
+            "type": "l"
+          },
+          {
+            "type": "r"
+          }
+        ]
+      }
+    },
+    {
+      "signature": "l",
+      "does": {
+        "emitOne": {
+          "type": "leaf",
+          "data": {
+            "side": 1
+          }
+        }
+      }
+    },
+    {
+      "signature": "r",
+      "does": {
+        "emitOne": {
+          "type": "leaf",
+          "data": {
+            "side": 2
+          }
+        }
+      }
+    },
+    {
+      "signature": "leaf",
+      "does": {
+        "forward": "done"
+      }
+    },
+    {
+      "signature": "pair",
+      "does": {
+        "emit": [
+          {
+            "type": "leaf",
+            "data": {
+              "side": 3
+            }
+          },
+          {
+            "type": "leaf",
+            "data": {
+              "side": 3
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "steps": [
+    {
+      "emit": {
+        "type": "root"
+      },
+      "expect": {
+        "settled": true,
+        "trace": [
+          {
+            "type": "root",
+            "claimed": true,
+            "then": [
+              {
+                "type": "r",
+                "claimed": true,
+                "then": [
+                  {
+                    "type": "leaf",
+                    "claimed": true,
+                    "then": [
+                      {
+                        "type": "done",
+                        "claimed": false
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "l",
+                "claimed": true,
+                "then": [
+                  {
+                    "type": "leaf",
+                    "claimed": true,
+                    "then": [
+                      {
+                        "type": "done",
+                        "claimed": false
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "take": [
+        {
+          "type": "done",
+          "data": {
+            "side": 2
+          }
+        },
+        {
+          "type": "done",
+          "data": {
+            "side": 1
+          }
+        }
+      ]
+    },
+    {
+      "emit": {
+        "type": "pair"
+      },
+      "expect": {
+        "settled": true,
+        "trace": [
+          {
+            "type": "pair",
+            "claimed": true,
+            "then": [
+              {
+                "type": "leaf",
+                "claimed": true,
+                "then": [
+                  {
+                    "type": "done",
+                    "claimed": false
+                  }
+                ]
+              },
+              {
+                "type": "leaf",
+                "claimed": true,
+                "then": [
+                  {
+                    "type": "done",
+                    "claimed": false
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "take": [
+        {
+          "type": "done",
+          "data": {
+            "side": 3
+          }
+        },
+        {
+          "type": "done",
+          "data": {
+            "side": 3
+          }
+        }
+      ]
+    }
+  ]
+}

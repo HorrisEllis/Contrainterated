@@ -1,0 +1,203 @@
+{
+  "format": 1,
+  "name": "the residue is the answer: a multiset that persists across propagations until taken",
+  "covers": [
+    "Rule 4",
+    "K1",
+    "The outside"
+  ],
+  "gates": [
+    {
+      "signature": "split",
+      "does": {
+        "emit": [
+          {
+            "type": "x",
+            "data": {
+              "v": 1
+            }
+          },
+          {
+            "type": "x",
+            "data": {
+              "v": 1
+            }
+          },
+          {
+            "type": "y",
+            "data": {
+              "w": 2
+            }
+          }
+        ]
+      }
+    },
+    {
+      "signature": "sink",
+      "does": {
+        "nothing": true
+      }
+    }
+  ],
+  "steps": [
+    {
+      "emit": {
+        "type": "split"
+      },
+      "expect": {
+        "settled": true,
+        "trace": [
+          {
+            "type": "split",
+            "claimed": true,
+            "then": [
+              {
+                "type": "y",
+                "claimed": false
+              },
+              {
+                "type": "x",
+                "claimed": false
+              },
+              {
+                "type": "x",
+                "claimed": false
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "emit": {
+        "type": "sink",
+        "data": {
+          "v": 9
+        }
+      },
+      "expect": {
+        "settled": true,
+        "trace": [
+          {
+            "type": "sink",
+            "claimed": true
+          }
+        ]
+      }
+    },
+    {
+      "sample": {
+        "residue": [
+          {
+            "type": "y",
+            "data": {
+              "w": 2
+            }
+          },
+          {
+            "type": "x",
+            "data": {
+              "v": 1
+            }
+          },
+          {
+            "type": "x",
+            "data": {
+              "v": 1
+            }
+          }
+        ],
+        "gateCount": 2
+      }
+    },
+    {
+      "emit": {
+        "type": "split"
+      },
+      "expect": "settled"
+    },
+    {
+      "sample": {
+        "residue": [
+          {
+            "type": "x",
+            "data": {
+              "v": 1
+            }
+          },
+          {
+            "type": "y",
+            "data": {
+              "w": 2
+            }
+          },
+          {
+            "type": "x",
+            "data": {
+              "v": 1
+            }
+          },
+          {
+            "type": "x",
+            "data": {
+              "v": 1
+            }
+          },
+          {
+            "type": "y",
+            "data": {
+              "w": 2
+            }
+          },
+          {
+            "type": "x",
+            "data": {
+              "v": 1
+            }
+          }
+        ],
+        "gateCount": 2
+      }
+    },
+    {
+      "take": [
+        {
+          "type": "y",
+          "data": {
+            "w": 2
+          }
+        },
+        {
+          "type": "y",
+          "data": {
+            "w": 2
+          }
+        },
+        {
+          "type": "x",
+          "data": {
+            "v": 1
+          }
+        },
+        {
+          "type": "x",
+          "data": {
+            "v": 1
+          }
+        },
+        {
+          "type": "x",
+          "data": {
+            "v": 1
+          }
+        },
+        {
+          "type": "x",
+          "data": {
+            "v": 1
+          }
+        }
+      ]
+    }
+  ]
+}

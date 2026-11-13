@@ -1,0 +1,16 @@
+# Runtime output
+errors.log
+saves/
+data/zones/
+
+# Composer
+vendor/
+composer.lock
+
+# PHP cache
+.phpunit.cache/
+*.cache
+
+# OS
+.DS_Store
+Thumbs.db

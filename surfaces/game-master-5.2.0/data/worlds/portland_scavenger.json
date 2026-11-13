@@ -1,0 +1,230 @@
+{
+    "id": "portland_scavenger",
+    "name": "Portland Scavenger Hunt",
+    "theme": "urban mystery",
+    "tone": "tense, disorienting, survival",
+    "worldRules": [
+        "Time flows realistically - walking a mile takes 20 minutes, driving varies with traffic",
+        "Player has no money, no phone, no ID",
+        "Portland geography is accurate - real streets, real distances, real transit",
+        "Weather and daylight reflect the current game time",
+        "NPCs may help or hinder - some want money, some are kind, some are dangerous",
+        "Police respond to crimes - stealing has consequences",
+        "Hunger, thirst, and fatigue exist but are not yet mechanically enforced",
+        "The player was drugged and remembers nothing before waking"
+    ],
+    "startingZone": "pioneer_square",
+    "startingTime": "06:00",
+    "startingDate": "October 15",
+    "startingMoney": 0,
+    "startingInventory": ["crumpled note"],
+    "startingSuggestions": ["Read the note", "Look around", "Check your pockets", "Ask someone for help"],
+    "playerDefaults": {
+        "inventory": ["crumpled note"],
+        "stats": {
+            "money": 0,
+            "landmarks_found": 0,
+            "hunger": 0,
+            "thirst": 0,
+            "fatigue": 0
+        }
+    },
+    "note": {
+        "title": "Typed note, no signature",
+        "content": [
+            "Find these ten places. Stand at each one. Say 'I am here' aloud.",
+            "",
+            "1. Where the city keeps its books and the roses bloom one block south",
+            "2. The steel cathedral where trains once dreamed",
+            "3. Witches and sugar at midnight - the pink one watches",
+            "4. A thousand feet above the city, a mansion remembers the view",
+            "5. The bridge named for a saint who never crossed it",
+            "6. Where the river bends and the dragon guards the garden",
+            "7. The mountain in the city where reservoirs hold the sky",
+            "8. Under the legs of the giant, farmers sell their wares",
+            "9. The church of cinema on a street named for a president",
+            "10. Where Hawthorne ends and the river begins",
+            "",
+            "Complete this and receive $1,000,000.",
+            "",
+            "Or..."
+        ]
+    },
+    "landmarks": {
+        "powells": {
+            "name": "Powell's City of Books",
+            "clueIndex": 1,
+            "lat": 45.5231,
+            "lng": -122.6815,
+            "streetview": "https://www.google.com/maps?layer=c&cbll=45.5231,-122.6815",
+            "hint": "The roses refer to the International Rose Test Garden, one block south of Powell's on the Park Blocks",
+            "verification": "The player must be at Powell's Books at 1005 W Burnside"
+        },
+        "union_station": {
+            "name": "Union Station",
+            "clueIndex": 2,
+            "lat": 45.5289,
+            "lng": -122.6765,
+            "streetview": "https://www.google.com/maps?layer=c&cbll=45.5289,-122.6765",
+            "hint": "The neon 'GO BY TRAIN' sign has watched over Portland since 1948",
+            "verification": "The player must be at Union Station at 800 NW 6th Ave"
+        },
+        "voodoo": {
+            "name": "Voodoo Doughnut",
+            "clueIndex": 3,
+            "lat": 45.5226,
+            "lng": -122.6731,
+            "streetview": "https://www.google.com/maps?layer=c&cbll=45.5226,-122.6731",
+            "hint": "The pink neon voodoo doll sign is visible from SW 3rd Ave",
+            "verification": "The player must be at Voodoo Doughnut at 22 SW 3rd Ave"
+        },
+        "pittock": {
+            "name": "Pittock Mansion",
+            "clueIndex": 4,
+            "lat": 45.5246,
+            "lng": -122.7162,
+            "streetview": "https://www.google.com/maps?layer=c&cbll=45.5246,-122.7162",
+            "hint": "1000 feet elevation, 46 acres, built 1914 by the Oregonian publisher",
+            "verification": "The player must be at Pittock Mansion at 3229 NW Pittock Dr"
+        },
+        "stjohns": {
+            "name": "St. Johns Bridge",
+            "clueIndex": 5,
+            "lat": 45.5847,
+            "lng": -122.7628,
+            "streetview": "https://www.google.com/maps?layer=c&cbll=45.5847,-122.7628",
+            "hint": "Gothic towers rise 400 feet above Cathedral Park",
+            "verification": "The player must be at St. Johns Bridge or Cathedral Park beneath it"
+        },
+        "lansugarden": {
+            "name": "Lan Su Chinese Garden",
+            "clueIndex": 6,
+            "lat": 45.5256,
+            "lng": -122.6728,
+            "streetview": "https://www.google.com/maps?layer=c&cbll=45.5256,-122.6728",
+            "hint": "A Suzhou-style garden in Old Town, the dragon is carved in stone",
+            "verification": "The player must be at Lan Su Chinese Garden at 239 NW Everett St"
+        },
+        "tabor": {
+            "name": "Mt. Tabor Park",
+            "clueIndex": 7,
+            "lat": 45.5118,
+            "lng": -122.5943,
+            "streetview": "https://www.google.com/maps?layer=c&cbll=45.5118,-122.5943",
+            "hint": "An extinct volcano within city limits, open reservoirs reflect clouds",
+            "verification": "The player must be at Mt. Tabor Park summit or reservoirs"
+        },
+        "portlandia": {
+            "name": "Portlandia Statue",
+            "clueIndex": 8,
+            "lat": 45.5153,
+            "lng": -122.6789,
+            "streetview": "https://www.google.com/maps?layer=c&cbll=45.5153,-122.6789",
+            "hint": "Second largest hammered copper statue in the US, above the Portland Building",
+            "verification": "The player must be at the Portland Building at 1120 SW 5th Ave"
+        },
+        "hollywood": {
+            "name": "Hollywood Theatre",
+            "clueIndex": 9,
+            "lat": 45.5393,
+            "lng": -122.6208,
+            "streetview": "https://www.google.com/maps?layer=c&cbll=45.5393,-122.6208",
+            "hint": "A 1926 movie palace on Sandy Boulevard, named for the district, not the city",
+            "verification": "The player must be at Hollywood Theatre at 4122 NE Sandy Blvd"
+        },
+        "hawthorne_bridge": {
+            "name": "Hawthorne Bridge (East End)",
+            "clueIndex": 10,
+            "lat": 45.5126,
+            "lng": -122.6673,
+            "streetview": "https://www.google.com/maps?layer=c&cbll=45.5126,-122.6673",
+            "hint": "The oldest vertical-lift bridge in operation in the US",
+            "verification": "The player must be at the east end of Hawthorne Bridge where it meets SE Hawthorne Blvd"
+        }
+    },
+    "zones": {
+        "pioneer_square": {
+            "name": "Pioneer Courthouse Square",
+            "description": "You wake on cold brick. Your head throbs. Dawn light filters through the amphitheater steps. A few early commuters hurry past, avoiding eye contact. In your hand, a crumpled piece of paper. Your pockets are empty - no wallet, no phone, nothing. The TriMet MAX rumbles past on the tracks. A coffee cart is setting up on the corner. You have no idea how you got here.",
+            "lat": 45.5189,
+            "lng": -122.6793,
+            "streetview": "https://www.google.com/maps?layer=c&cbll=45.5189,-122.6793",
+            "features": ["coffee_cart", "max_station", "brick_amphitheater", "weather_machine"],
+            "nearbyStreets": ["SW Broadway", "SW 6th Ave", "SW Morrison St", "SW Yamhill St"]
+        }
+    },
+    "transportation": {
+        "walking": {
+            "speed": "3 mph",
+            "cost": 0,
+            "notes": "Always available. Fatigue will eventually matter."
+        },
+        "trimet_bus": {
+            "cost": 2.50,
+            "notes": "Requires fare. Honor system but inspectors exist. Day pass is $5."
+        },
+        "trimet_max": {
+            "cost": 2.50,
+            "notes": "Light rail. Requires fare. Connects downtown to many areas."
+        },
+        "uber_lyft": {
+            "cost": "varies, typically $8-25",
+            "notes": "Requires a phone and payment method. Player has neither."
+        },
+        "bike_share": {
+            "cost": "5/ride or requires app",
+            "notes": "Biketown stations scattered around city"
+        },
+        "stolen_bicycle": {
+            "cost": 0,
+            "notes": "Illegal. May attract attention. Must find an unlocked bike."
+        },
+        "stolen_car": {
+            "cost": 0,
+            "notes": "Felony. Requires hotwiring knowledge. High police response."
+        },
+        "hitchhiking": {
+            "cost": 0,
+            "notes": "Unpredictable. Some drivers are kind. Some are not."
+        },
+        "beg_for_fare": {
+            "cost": 0,
+            "notes": "May work. May not. Depends on approach and luck."
+        }
+    },
+    "timeflow": {
+        "walking_per_mile": 20,
+        "biking_per_mile": 6,
+        "driving_no_traffic": 3,
+        "driving_rush_hour": 10,
+        "max_per_mile": 4,
+        "bus_per_mile": 5,
+        "waiting_for_bus": "5-20 minutes depending on route and time",
+        "rush_hours": ["7:00-9:00", "16:00-18:30"]
+    },
+    "distances_from_pioneer": {
+        "powells": "0.3 miles north",
+        "union_station": "0.6 miles north",
+        "voodoo": "0.4 miles east",
+        "pittock": "3.5 miles west (uphill)",
+        "stjohns": "7 miles north",
+        "lansugarden": "0.5 miles north",
+        "tabor": "5 miles east",
+        "portlandia": "0.1 miles south",
+        "hollywood": "4 miles northeast",
+        "hawthorne_bridge": "0.5 miles southeast"
+    },
+    "winCondition": {
+        "type": "visit_all_landmarks",
+        "required": 10,
+        "action": "Say 'I am here' at each landmark",
+        "reward": "$1,000,000 (supposedly)"
+    },
+    "meta": {
+        "difficulty": "high",
+        "estimatedTime": "8-16 hours game time if optimal, much longer if not",
+        "themes": ["survival", "urban exploration", "mystery", "resource management"],
+        "inspiration": ["Oregon Trail", "urban orienteering", "escape room"],
+        "version": "1.0"
+    }
+}

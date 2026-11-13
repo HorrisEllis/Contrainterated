@@ -1,0 +1,113 @@
+/* terminal.css — root variables, resets, CRT chrome */
+
+:root {
+    --green:        #00ff41;
+    --green-dim:    #00aa2a;
+    --green-glow:   rgba(0, 255, 65, 0.4);
+    --amber:        #ffb000;
+    --red:          #ff3333;
+    --bg-dark:      #0a0a0a;
+    --bg-screen:    #050808;
+    --scanline-opacity: 0.05;
+    --font-vt:      'VT323', monospace;
+    --font-mono:    'Share Tech Mono', monospace;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg-dark);
+    font-family: var(--font-vt);
+    color: var(--green);
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* ── CRT monitor shell ─────────────────────────────── */
+.monitor {
+    width: 100%;
+    max-width: 900px;
+    height: calc(100vh - 40px);
+    background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 50%, #1a1a1a 100%);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow:
+        0 0 0 3px #333,
+        0 0 0 6px #1a1a1a,
+        0 0 50px rgba(0, 255, 65, 0.1),
+        inset 0 0 100px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+/* traffic-light dots */
+.monitor::before {
+    content: '';
+    position: absolute;
+    top: 10px; left: 30px;
+    width: 12px; height: 12px;
+    background: var(--red);
+    border-radius: 50%;
+    box-shadow: 25px 0 0 var(--amber), 50px 0 0 var(--green);
+    opacity: 0.8;
+}
+
+/* ── Screen glass ──────────────────────────────────── */
+.screen {
+    width: 100%; height: 100%;
+    background: var(--bg-screen);
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+        inset 0 0 100px rgba(0, 255, 65, 0.03),
+        inset 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+/* scanlines */
+.screen::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0,0,0,var(--scanline-opacity)),
+        rgba(0,0,0,var(--scanline-opacity)) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* CRT flicker layer */
+.screen::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: rgba(0, 255, 65, 0.01);
+    pointer-events: none;
+    z-index: 99;
+    animation: crt-flicker 0.15s infinite;
+}
+
+/* ── Typography helpers ────────────────────────────── */
+.text-green     { color: var(--green); }
+.text-dim       { color: var(--green-dim); }
+.text-amber     { color: var(--amber); }
+.text-red       { color: var(--red); }
+.text-glow      { text-shadow: 0 0 5px var(--green-glow); }
+.letter-wide    { letter-spacing: 3px; }
+.hidden         { display: none !important; }
+
+/* ── Scrollbar ─────────────────────────────────────── */
+::-webkit-scrollbar            { width: 10px; }
+::-webkit-scrollbar-track      { background: rgba(0,170,42,0.1); border-radius: 3px; }
+::-webkit-scrollbar-thumb      { background: var(--green-dim); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover{ background: var(--green); }
+* { scrollbar-width: thin; scrollbar-color: var(--green-dim) var(--bg-screen); }

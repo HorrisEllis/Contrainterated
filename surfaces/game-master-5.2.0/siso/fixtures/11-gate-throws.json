@@ -1,0 +1,97 @@
+{
+  "format": 1,
+  "name": "a gate that raises rejects the propagation; the cause is exactly what it raised",
+  "covers": [
+    "Rule 1",
+    "K5"
+  ],
+  "gates": [
+    {
+      "signature": "t",
+      "does": {
+        "throw": "top failed"
+      }
+    },
+    {
+      "signature": "a",
+      "does": {
+        "emitOne": {
+          "type": "b"
+        }
+      }
+    },
+    {
+      "signature": "b",
+      "does": {
+        "throw": "boom: the gate failed"
+      }
+    }
+  ],
+  "steps": [
+    {
+      "emit": {
+        "type": "seed"
+      },
+      "expect": "settled"
+    },
+    {
+      "emit": {
+        "type": "t"
+      },
+      "expect": {
+        "rejected": {
+          "code": "SISO_GATE_THREW",
+          "eventType": "t",
+          "cause": "top failed",
+          "at": [
+            "t"
+          ]
+        },
+        "trace": [
+          {
+            "type": "t",
+            "claimed": true
+          }
+        ]
+      }
+    },
+    {
+      "emit": {
+        "type": "a"
+      },
+      "expect": {
+        "rejected": {
+          "code": "SISO_GATE_THREW",
+          "eventType": "b",
+          "cause": "boom: the gate failed",
+          "at": [
+            "a",
+            "b"
+          ]
+        },
+        "trace": [
+          {
+            "type": "a",
+            "claimed": true,
+            "then": [
+              {
+                "type": "b",
+                "claimed": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "sample": {
+        "residue": [
+          {
+            "type": "seed"
+          }
+        ],
+        "gateCount": 3
+      }
+    }
+  ]
+}

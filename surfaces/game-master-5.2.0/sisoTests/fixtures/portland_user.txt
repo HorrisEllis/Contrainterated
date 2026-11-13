@@ -1,0 +1,4 @@
+PLAYER ACTION: walk to powells
+
+RECENT ACTIONS:
+- Turn 1: read the note

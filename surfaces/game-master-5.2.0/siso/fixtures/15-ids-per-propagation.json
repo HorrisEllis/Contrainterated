@@ -1,0 +1,107 @@
+{
+  "format": 1,
+  "name": "ids are per propagation: an identical entry is rejected at the same delivery every time",
+  "covers": [
+    "K4",
+    "K5",
+    "Rule 3"
+  ],
+  "gates": [
+    {
+      "signature": "a",
+      "does": {
+        "emitOne": {
+          "type": "b"
+        }
+      }
+    },
+    {
+      "signature": "b",
+      "does": {
+        "emit": [
+          {
+            "type": "c"
+          },
+          {
+            "type": "d"
+          }
+        ]
+      }
+    },
+    {
+      "signature": "d",
+      "does": {
+        "throw": "d failed"
+      }
+    }
+  ],
+  "steps": [
+    {
+      "emit": {
+        "type": "a"
+      },
+      "expect": {
+        "rejected": {
+          "code": "SISO_GATE_THREW",
+          "eventType": "d",
+          "cause": "d failed",
+          "at": [
+            "a",
+            "b",
+            "d"
+          ]
+        }
+      }
+    },
+    {
+      "emit": {
+        "type": "a"
+      },
+      "expect": {
+        "rejected": {
+          "code": "SISO_GATE_THREW",
+          "eventType": "d",
+          "cause": "d failed",
+          "at": [
+            "a",
+            "b",
+            "d"
+          ]
+        }
+      }
+    },
+    {
+      "emit": {
+        "type": "x"
+      },
+      "expect": "settled"
+    },
+    {
+      "emit": {
+        "type": "a",
+        "data": {
+          "v": 2
+        }
+      },
+      "expect": {
+        "rejected": {
+          "code": "SISO_GATE_THREW",
+          "eventType": "d",
+          "cause": "d failed",
+          "at": [
+            "a",
+            "b",
+            "d"
+          ]
+        }
+      }
+    },
+    {
+      "take": [
+        {
+          "type": "x"
+        }
+      ]
+    }
+  ]
+}

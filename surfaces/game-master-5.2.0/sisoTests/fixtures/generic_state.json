@@ -1,0 +1,6 @@
+{"gameId":"g1","worldTemplateId":"derelict_spaceship","currentZone":"bridge","zoneDescription":"The bridge is dark.","turnCount":2,
+ "player":{"name":"Ann","inventory":["torch","keycard"],"stats":{"health":90}},
+ "entities":[{"id":"terminal","name":"Terminal","present":true,"properties":{"powered":false}},{"id":"ghost","name":"Ghost","present":false,"properties":{}}],
+ "worldState":{"day":3,"globalFlags":{}},
+ "profile":{"actionHistory":[{"turn":1,"action":"look"},{"turn":2,"action":"open door"}],"observations":["Player is careful","Player likes doors"]},
+ "worldTemplate":{"theme":"sci-fi","tone":"eerie","worldRules":["Air is scarce","Power is low"]}}

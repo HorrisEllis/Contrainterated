@@ -1,0 +1,137 @@
+{
+  "format": 1,
+  "name": "a gate that returns its own type is rejected, alone or inside a list, at the delivery whose gate returned it",
+  "covers": [
+    "Rule 3",
+    "K5"
+  ],
+  "gates": [
+    {
+      "signature": "loop",
+      "does": {
+        "emitOne": {
+          "type": "loop"
+        }
+      }
+    },
+    {
+      "signature": "listed",
+      "does": {
+        "emit": [
+          {
+            "type": "other"
+          },
+          {
+            "type": "listed"
+          }
+        ]
+      }
+    },
+    {
+      "signature": "a",
+      "does": {
+        "emitOne": {
+          "type": "b"
+        }
+      }
+    },
+    {
+      "signature": "b",
+      "does": {
+        "emit": [
+          {
+            "type": "c"
+          },
+          {
+            "type": "b"
+          }
+        ]
+      }
+    }
+  ],
+  "steps": [
+    {
+      "emit": {
+        "type": "seed"
+      },
+      "expect": "settled"
+    },
+    {
+      "emit": {
+        "type": "loop"
+      },
+      "expect": {
+        "rejected": {
+          "code": "SISO_SELF_LOOP",
+          "eventType": "loop",
+          "at": [
+            "loop"
+          ]
+        },
+        "trace": [
+          {
+            "type": "loop",
+            "claimed": true
+          }
+        ]
+      }
+    },
+    {
+      "emit": {
+        "type": "listed"
+      },
+      "expect": {
+        "rejected": {
+          "code": "SISO_SELF_LOOP",
+          "eventType": "listed",
+          "at": [
+            "listed"
+          ]
+        },
+        "trace": [
+          {
+            "type": "listed",
+            "claimed": true
+          }
+        ]
+      }
+    },
+    {
+      "emit": {
+        "type": "a"
+      },
+      "expect": {
+        "rejected": {
+          "code": "SISO_SELF_LOOP",
+          "eventType": "b",
+          "at": [
+            "a",
+            "b"
+          ]
+        },
+        "trace": [
+          {
+            "type": "a",
+            "claimed": true,
+            "then": [
+              {
+                "type": "b",
+                "claimed": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "sample": {
+        "residue": [
+          {
+            "type": "seed"
+          }
+        ],
+        "gateCount": 4
+      }
+    }
+  ]
+}

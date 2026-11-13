@@ -1,0 +1,153 @@
+{
+  "format": 1,
+  "name": "the longest legal chain claims one delivery per gate and ends unclaimed at depth gate count + 1",
+  "covers": [
+    "Rule 3",
+    "K4"
+  ],
+  "gates": [
+    {
+      "signature": "g1",
+      "does": {
+        "forward": "g2"
+      }
+    },
+    {
+      "signature": "g2",
+      "does": {
+        "forward": "g3"
+      }
+    },
+    {
+      "signature": "g3",
+      "does": {
+        "forward": "g4"
+      }
+    },
+    {
+      "signature": "g4",
+      "does": {
+        "forward": "end"
+      }
+    }
+  ],
+  "steps": [
+    {
+      "emit": {
+        "type": "g1",
+        "data": {
+          "v": 1
+        }
+      },
+      "expect": {
+        "settled": true,
+        "trace": [
+          {
+            "type": "g1",
+            "claimed": true,
+            "then": [
+              {
+                "type": "g2",
+                "claimed": true,
+                "then": [
+                  {
+                    "type": "g3",
+                    "claimed": true,
+                    "then": [
+                      {
+                        "type": "g4",
+                        "claimed": true,
+                        "then": [
+                          {
+                            "type": "end",
+                            "claimed": false
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "take": [
+        {
+          "type": "end",
+          "data": {
+            "v": 1
+          }
+        }
+      ]
+    },
+    {
+      "register": {
+        "signature": "end",
+        "does": {
+          "forward": "tail"
+        }
+      },
+      "refused": false
+    },
+    {
+      "emit": {
+        "type": "g1",
+        "data": {
+          "v": 2
+        }
+      },
+      "expect": {
+        "settled": true,
+        "trace": [
+          {
+            "type": "g1",
+            "claimed": true,
+            "then": [
+              {
+                "type": "g2",
+                "claimed": true,
+                "then": [
+                  {
+                    "type": "g3",
+                    "claimed": true,
+                    "then": [
+                      {
+                        "type": "g4",
+                        "claimed": true,
+                        "then": [
+                          {
+                            "type": "end",
+                            "claimed": true,
+                            "then": [
+                              {
+                                "type": "tail",
+                                "claimed": false
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "take": [
+        {
+          "type": "tail",
+          "data": {
+            "v": 2
+          }
+        }
+      ]
+    }
+  ]
+}

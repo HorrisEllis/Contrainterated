@@ -1,0 +1,122 @@
+{
+  "format": 1,
+  "name": "registration refuses a duplicate signature and changes nothing; a new signature is accepted",
+  "covers": [
+    "K2",
+    "K3",
+    "The outside"
+  ],
+  "gates": [
+    {
+      "signature": "a",
+      "does": {
+        "emitOne": {
+          "type": "first"
+        }
+      }
+    }
+  ],
+  "steps": [
+    {
+      "emit": {
+        "type": "a"
+      },
+      "expect": "settled"
+    },
+    {
+      "register": {
+        "signature": "a",
+        "does": {
+          "emitOne": {
+            "type": "second"
+          }
+        }
+      },
+      "refused": true
+    },
+    {
+      "sample": {
+        "residue": [
+          {
+            "type": "first"
+          }
+        ],
+        "gateCount": 1
+      }
+    },
+    {
+      "register": {
+        "signature": "b",
+        "does": {
+          "nothing": true
+        }
+      },
+      "refused": false
+    },
+    {
+      "register": {
+        "signature": "b",
+        "does": {
+          "emitOne": {
+            "type": "third"
+          }
+        }
+      },
+      "refused": true
+    },
+    {
+      "sample": {
+        "residue": [
+          {
+            "type": "first"
+          }
+        ],
+        "gateCount": 2
+      }
+    },
+    {
+      "emit": {
+        "type": "a"
+      },
+      "expect": {
+        "settled": true,
+        "trace": [
+          {
+            "type": "a",
+            "claimed": true,
+            "then": [
+              {
+                "type": "first",
+                "claimed": false
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "emit": {
+        "type": "b"
+      },
+      "expect": {
+        "settled": true,
+        "trace": [
+          {
+            "type": "b",
+            "claimed": true
+          }
+        ]
+      }
+    },
+    {
+      "take": [
+        {
+          "type": "first"
+        },
+        {
+          "type": "first"
+        }
+      ]
+    }
+  ]
+}

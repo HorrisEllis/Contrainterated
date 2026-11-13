@@ -1,0 +1,5 @@
+PLAYER ACTION: examine the terminal
+
+RECENT ACTIONS:
+- Turn 1: look
+- Turn 2: open door

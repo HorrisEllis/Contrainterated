@@ -1,0 +1,240 @@
+{
+  "format": 1,
+  "name": "a gate output that is not nil, an Event or a list of Events, and an entry that is not an Event, are rejected",
+  "covers": [
+    "Rule 1",
+    "K5",
+    "The outside"
+  ],
+  "gates": [
+    {
+      "signature": "num",
+      "does": {
+        "raw": 42
+      }
+    },
+    {
+      "signature": "text",
+      "does": {
+        "raw": "text"
+      }
+    },
+    {
+      "signature": "no",
+      "does": {
+        "raw": false
+      }
+    },
+    {
+      "signature": "fake",
+      "does": {
+        "raw": {
+          "type": "x",
+          "data": {
+            "v": 1
+          }
+        }
+      }
+    },
+    {
+      "signature": "list",
+      "does": {
+        "raw": [
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "signature": "mixed",
+      "does": {
+        "emit": [
+          {
+            "type": "ok"
+          },
+          {
+            "raw": "not an event"
+          }
+        ]
+      }
+    },
+    {
+      "signature": "a",
+      "does": {
+        "emitOne": {
+          "type": "num"
+        }
+      }
+    }
+  ],
+  "steps": [
+    {
+      "emit": {
+        "type": "seed"
+      },
+      "expect": "settled"
+    },
+    {
+      "emit": {
+        "type": "num"
+      },
+      "expect": {
+        "rejected": {
+          "code": "SISO_NOT_EVENT",
+          "eventType": "num",
+          "at": [
+            "num"
+          ]
+        },
+        "trace": [
+          {
+            "type": "num",
+            "claimed": true
+          }
+        ]
+      }
+    },
+    {
+      "emit": {
+        "type": "text"
+      },
+      "expect": {
+        "rejected": {
+          "code": "SISO_NOT_EVENT",
+          "eventType": "text",
+          "at": [
+            "text"
+          ]
+        }
+      }
+    },
+    {
+      "emit": {
+        "type": "no"
+      },
+      "expect": {
+        "rejected": {
+          "code": "SISO_NOT_EVENT",
+          "eventType": "no",
+          "at": [
+            "no"
+          ]
+        }
+      }
+    },
+    {
+      "emit": {
+        "type": "fake"
+      },
+      "expect": {
+        "rejected": {
+          "code": "SISO_NOT_EVENT",
+          "eventType": "fake",
+          "at": [
+            "fake"
+          ]
+        }
+      }
+    },
+    {
+      "emit": {
+        "type": "list"
+      },
+      "expect": {
+        "rejected": {
+          "code": "SISO_NOT_EVENT",
+          "eventType": "list",
+          "at": [
+            "list"
+          ]
+        }
+      }
+    },
+    {
+      "emit": {
+        "type": "mixed"
+      },
+      "expect": {
+        "rejected": {
+          "code": "SISO_NOT_EVENT",
+          "eventType": "mixed",
+          "at": [
+            "mixed"
+          ]
+        },
+        "trace": [
+          {
+            "type": "mixed",
+            "claimed": true
+          }
+        ]
+      }
+    },
+    {
+      "emit": {
+        "type": "a"
+      },
+      "expect": {
+        "rejected": {
+          "code": "SISO_NOT_EVENT",
+          "eventType": "num",
+          "at": [
+            "a",
+            "num"
+          ]
+        },
+        "trace": [
+          {
+            "type": "a",
+            "claimed": true,
+            "then": [
+              {
+                "type": "num",
+                "claimed": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "emitRaw": {
+        "type": "a",
+        "data": {
+          "v": 1
+        }
+      },
+      "expect": {
+        "rejected": {
+          "code": "SISO_NOT_EVENT"
+        }
+      }
+    },
+    {
+      "emitRaw": "a",
+      "expect": {
+        "rejected": {
+          "code": "SISO_NOT_EVENT"
+        }
+      }
+    },
+    {
+      "emitRaw": 7,
+      "expect": {
+        "rejected": {
+          "code": "SISO_NOT_EVENT"
+        }
+      }
+    },
+    {
+      "sample": {
+        "residue": [
+          {
+            "type": "seed"
+          }
+        ],
+        "gateCount": 7
+      }
+    }
+  ]
+}

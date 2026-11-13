@@ -1,0 +1,18 @@
+Generate zone with ID: engine_room
+
+Connected from: Command Bridge
+Parent zone description: Consoles flicker in the dark.
+Direction from parent: down
+
+Current game zone: bridge
+Day: 3
+
+Constraints:
+- lighting: dim
+- hazards: steam, sparks
+
+Player stats: {"health":90}
+
+Recent player observations: Player is careful; Player likes doors
+
+Generate a zone that fits naturally in this world and provides interesting exploration opportunities.

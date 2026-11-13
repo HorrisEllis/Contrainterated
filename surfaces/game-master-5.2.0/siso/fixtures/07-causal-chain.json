@@ -1,0 +1,104 @@
+{
+  "format": 1,
+  "name": "causality is carried by events: a chain's trace names each delivery's cause",
+  "covers": [
+    "K4",
+    "Rule 3"
+  ],
+  "gates": [
+    {
+      "signature": "a",
+      "does": {
+        "forward": "b"
+      }
+    },
+    {
+      "signature": "b",
+      "does": {
+        "forward": "c"
+      }
+    },
+    {
+      "signature": "c",
+      "does": {
+        "forward": "d"
+      }
+    }
+  ],
+  "steps": [
+    {
+      "emit": {
+        "type": "a",
+        "data": {
+          "v": 7
+        }
+      },
+      "expect": {
+        "settled": true,
+        "trace": [
+          {
+            "type": "a",
+            "claimed": true,
+            "then": [
+              {
+                "type": "b",
+                "claimed": true,
+                "then": [
+                  {
+                    "type": "c",
+                    "claimed": true,
+                    "then": [
+                      {
+                        "type": "d",
+                        "claimed": false
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "emit": {
+        "type": "c",
+        "data": {
+          "v": 8
+        }
+      },
+      "expect": {
+        "settled": true,
+        "trace": [
+          {
+            "type": "c",
+            "claimed": true,
+            "then": [
+              {
+                "type": "d",
+                "claimed": false
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "take": [
+        {
+          "type": "d",
+          "data": {
+            "v": 8
+          }
+        },
+        {
+          "type": "d",
+          "data": {
+            "v": 7
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+// bridge/inventory_guard.eg — the game master's Phase 5 inventory guard, written in Emerge.
+// Ported from surfaces/game-master-5.2.0/src/Gates/StateUpdateGate.php (applyInventoryChange), rule for rule:
+//   add:X     ignored if X is already held; kept only if X names a known entity (by lowercased name, else id),
+//             is an entity id, or is an entity changed this turn (entityChanges[].entityId). Otherwise discarded:
+//             the narrative plays, the state does not change.
+//   remove:X  removes every copy of X if X is held; otherwise ignored.
+// A pure function of its inputs (SISO Rule 1): no state, no I/O, never raises on a well-formed change.
+// Run:  node <nexus>/emerge/emerge/lang/eg.js test bridge/inventory_guard.eg
+
+// starts_with and contains are handler-pattern words in Emerge, not functions, so two small helpers stand in.
+fn _begins(s, prefix) = len(s) >= len(prefix) and slice(s, 0, len(prefix)) == prefix
+fn _holds(xs, x) = index_of(xs, x) >= 0
+
+fn _known_names(entities) = map(entities, fn(e) = lower(str(get(e, "name", get(e, "id", "")))))
+fn _known_ids(entities) = map(filter(entities, fn(e) = has(e, "id")), fn(e) = e.id)
+fn _changed_ids(changes) = map(filter(changes, fn(c) = has(c, "entityId")), fn(c) = c.entityId)
+
+/** one inventory change applied to an inventory list; returns the new list */
+fn apply_change(inventory, change, entities, entity_changes) {
+  if _begins(change, "add:") {
+    let item = trim(slice(change, 4))
+    if _holds(inventory, item) { return inventory }
+    if _holds(_known_names(entities), lower(item)) or _holds(_known_ids(entities), item) or _holds(_changed_ids(entity_changes), item) {
+      return push(inventory, item)
+    }
+    return inventory
+  }
+  if _begins(change, "remove:") {
+    let item = trim(slice(change, 7))
+    if _holds(inventory, item) { return filter(inventory, fn(i) = i != item) }
+  }
+  return inventory
+}
+
+/** every change of one AI reply, in order */
+fn apply_all(inventory, changes, entities, entity_changes) = reduce(changes, fn(inv, c) = apply_change(inv, c, entities, entity_changes), inventory)
+
+let SCENE = [{ id: "terminal", name: "Ship Terminal" }, { id: "data_chip", name: "Data Chip" }]
+
+test "add: an entity in the scene, by id" {
+  expect apply_change(["flashlight"], "add:data_chip", SCENE, []) == ["flashlight", "data_chip"]
+}
+test "add: by name, any case" {
+  expect apply_change([], "add: ship terminal", SCENE, []) == ["ship terminal"]
+}
+test "add: a hallucinated item is discarded" {
+  expect apply_change(["flashlight"], "add:plasma_rifle", SCENE, []) == ["flashlight"]
+}
+test "add: an entity changed this turn (an NPC hands it over)" {
+  expect apply_change([], "add:key", SCENE, [{ entityId: "key", properties: {} }]) == ["key"]
+}
+test "add: something already held is not doubled" {
+  expect apply_change(["data_chip"], "add:data_chip", SCENE, []) == ["data_chip"]
+}
+test "remove: only what is held" {
+  expect apply_change(["flashlight"], "remove:plasma_rifle", SCENE, []) == ["flashlight"]
+  expect apply_change(["flashlight", "rope"], "remove:flashlight", SCENE, []) == ["rope"]
+}
+test "a whole reply, in order" {
+  expect apply_all(["flashlight"], ["add:data_chip", "add:plasma_rifle", "remove:flashlight", "remove:ghost"], SCENE, []) == ["data_chip"]
+}
+test "an unknown verb changes nothing" {
+  expect apply_change(["flashlight"], "drop:flashlight", SCENE, []) == ["flashlight"]
+}
