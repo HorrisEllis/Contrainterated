@@ -195,9 +195,9 @@ line, summed.
 | core, Python | `python3 -B py/sisoTests/<name>.test.py`, all 21 | **394/394** passed |
 | core, Lua (the reference) | `cd lua && lua5.4 sisoTests/<name>.test.lua` | **not run**: Lua 5.4 is not installed in this container and could not be installed here |
 | game master | `php run_tests.php` | **all 10 suites passed**: vendored core PHP 371/371, JS 376/376, fixtures 92/92 steps in each of PHP and JS, vendor pin 6/6, server census 37/37, client census 7/7, client scenarios 9/9, templates 4/4, scenarios 18/18 |
-| bridge | `eg test engine/laws/inventory_guard.eg` (Emerge 1.13.0, Nexus 0.60.514) | **8/8** passed |
-| the game | `eg test engine/turn.eg` | **20/20** passed; bridge lock removed: 19/20 |
-| two worlds | `eg test bridge/two_worlds.eg` | **7/7** passed; with Fantasy's law removed 6/7, with the request wall removed 4/7 (the tests can fail) |
+| inventory guard | `emerge engine/laws/inventory_guard.eg --test` (Emerge 1.13.0, Nexus 0.60.514) | **8/8** passed |
+| the game | `emerge engine/turn.eg --test` | **12/12** passed (the guard's 8 run in their own file); bridge lock removed: a test fails |
+| two worlds | `emerge bridge/two_worlds.eg --test` | **7/7** passed; with Fantasy's law removed 6/7, with the request wall removed 4/7 (the tests can fail) |
 | bridge vs PHP | the same 9 inventory cases through `StateUpdateGate::applyInventoryChange` by reflection | **9/9 equal** |
 
 Not run: the game master's optional `tests/browser.e2e.mjs` (Playwright). Nexus tests UI in Clear Glass, never
@@ -345,7 +345,7 @@ Learned while writing it: in Emerge, `starts_with` and `contains` are handler-pa
 ## Running everything
 
 Requirements: PHP 8.1 or later, Node 18 or later (22.15 or later for the JS copy-count cases), Python 3.10 or later,
-Lua 5.4 for the core's reference, and a Nexus checkout for Emerge (`emerge/emerge/lang/eg.js`). No package installs.
+Lua 5.4 for the core's reference, and Emerge's compiler (`emerge/emerge/lang/native/bin/emerge` in Nexus). No package installs.
 
 The SISO core, from `surfaces/siso-core-13.2.1/`:
 
@@ -378,11 +378,11 @@ GAMEMASTER_MOCK_AI=true php -S localhost:8080 router.php
 The Emerge bridge, from the repository root (`NEXUS` is your Nexus checkout):
 
 ```bash
-node "$NEXUS/emerge/emerge/lang/eg.js" check engine/laws/inventory_guard.eg
+"$EMERGE" engine/turn.eg --test -o turn-tests && ./turn-tests
 ```
 
 ```bash
-node "$NEXUS/emerge/emerge/lang/eg.js" test engine/laws/inventory_guard.eg
+"$EMERGE" engine/laws/inventory_guard.eg --test -o guard-tests && ./guard-tests
 ```
 
 ---

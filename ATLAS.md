@@ -43,7 +43,7 @@ cd surfaces/game-master-5.2.0 && php run_tests.php
 ```
 
 ```bash
-node "$NEXUS/emerge/emerge/lang/eg.js" test engine/laws/inventory_guard.eg
+"$EMERGE" engine/laws/inventory_guard.eg --test -o guard-tests && ./guard-tests
 ```
 
 ```
@@ -167,7 +167,7 @@ The Emerge bridge has no spine yet: it is one pure function.
 | Other system | May read | May never write | Enforced by |
 |---|---|---|---|
 | Nexus Emerge | nothing in this repository | everything | process: Emerge is invoked as a tool on this repository's files |
-| this repository → Nexus | Emerge's language through `eg.js` (check, test, run, build) | everything in Nexus | process boundary; by convention only (no API route used yet) |
+| this repository → Nexus | Emerge's compiler, `lang/native/bin/emerge` (build, `--test`); no JavaScript | everything in Nexus | process boundary; by convention only (no API route used yet) |
 | `surfaces/*` ↔ `bridge/` | the bridge's tests may name surface behaviour | the bridge never edits a surface | convention; a surface is replaced only whole, from a new upload |
 
 ### Pulse (liveness)
@@ -214,7 +214,7 @@ The Emerge bridge has no spine yet: it is one pure function.
 | Status | Meaning | Entry condition | Exit condition |
 |---|---|---|---|
 | `vendored` | a surface, unchanged from its upload | unpacked from a zip whose hash is recorded | replaced whole by a newer upload |
-| `ported` | an Emerge piece with its own tests | `eg check` clean, its tests pass | becomes `matched` |
+| `ported` | an Emerge piece with its own tests | `emerge` builds it, its `--test` program passes | becomes `matched` |
 | `matched` | an Emerge piece equal to its original on fixed inputs | a committed differential test passes | stays, or returns to `ported` if the original changes |
 
 ---
@@ -244,8 +244,8 @@ and returns a new list; it never raises on a well-formed change.
 
 | Command | Operates on | What it does |
 |---|---|---|
-| `bridge.inventory_guard.check` | [`engine/laws/inventory_guard.eg`](engine/laws/inventory_guard.eg) | `eg check`: names, types, axioms |
-| `bridge.inventory_guard.test` | [`engine/laws/inventory_guard.eg`](engine/laws/inventory_guard.eg) | `eg test`: the 8 test blocks |
+| `bridge.inventory_guard.check` | [`engine/laws/inventory_guard.eg`](engine/laws/inventory_guard.eg) | `emerge … -o`: builds it (refuses what it cannot compile, by name) |
+| `bridge.inventory_guard.test` | [`engine/laws/inventory_guard.eg`](engine/laws/inventory_guard.eg) | `emerge … --test`: the 8 test blocks |
 
 **How to use it**
 
@@ -413,8 +413,8 @@ for t in py/sisoTests/*.test.py; do python3 -B "$t" | tail -1; done
 php run_tests.php
 GAMEMASTER_MOCK_AI=true php -S localhost:8080 router.php
 # the Emerge bridge, from the repository root
-node "$NEXUS/emerge/emerge/lang/eg.js" check engine/laws/inventory_guard.eg
-node "$NEXUS/emerge/emerge/lang/eg.js" test engine/laws/inventory_guard.eg
+"$EMERGE" engine/play.eg -o game && ./game new
+"$EMERGE" engine/laws/inventory_guard.eg --test -o guard-tests && ./guard-tests
 ```
 
 ---

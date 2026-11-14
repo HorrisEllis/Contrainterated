@@ -5,7 +5,7 @@
 //             the narrative plays, the state does not change.
 //   remove:X  removes every copy of X if X is held; otherwise ignored.
 // A pure function of its inputs (SISO Rule 1): no state, no I/O, never raises on a well-formed change.
-// Run:  node <nexus>/emerge/emerge/lang/eg.js test engine/laws/inventory_guard.eg
+// Run:  emerge engine/laws/inventory_guard.eg --test -o guard-tests && ./guard-tests   (emerge = lang/native/bin/emerge)
 
 // starts_with and contains are handler-pattern words in Emerge, not functions, so two small helpers stand in.
 fn _begins(s, prefix) = len(s) >= len(prefix) and slice(s, 0, len(prefix)) == prefix

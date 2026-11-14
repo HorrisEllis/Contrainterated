@@ -10,7 +10,7 @@
 // Each world keeps its own hard law. Fantasy refuses technology, whatever was agreed: a law cannot be consented away.
 // Every crossing, refusal and law broken lands in the hash-chained ledger: the admin log. An edited
 // entry fails ledger_verify(): tampering is detected afterwards, not prevented.
-// Run:  node <nexus>/emerge/emerge/lang/eg.js test bridge/two_worlds.eg
+// Run:  emerge bridge/two_worlds.eg --test -o two-worlds-tests && ./two-worlds-tests   (emerge = lang/native/bin/emerge)
 
 let FREE = ["love", "poke", "need"]
 fn _free(kind) = index_of(FREE, kind) >= 0
