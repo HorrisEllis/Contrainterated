@@ -29,7 +29,12 @@ Its laws are checked before anything changes: you only walk through an exit the 
 item in your hands; you only take what is in the room (the inventory guard); you only drop what you hold.
 
 Proof, 2026-11-14: `eg test engine/turn.eg` 20/20, including a whole game from the airlock to the bridge; with the
-bridge lock removed, 19/20 (the test can fail). It also compiles to JavaScript:
+bridge lock removed, 19/20 (the test can fail). **It compiles to a native program, in Emerge's own compiler.** `eg native engine/play.eg -o game` writes one
+Linux x86-64 executable (about 310 KB, statically linked: no Node, no libc, no runtime to install). Built and played
+here on 2026-11-14 from `new` to the win; its save is the same file the interpreter reads, and the interpreter
+carried on from it. On a Linux server, the game is that one file plus the world files.
+
+It also compiles to JavaScript:
 `eg build engine/play.eg -o out --standalone` carries the Emerge runtime with it, and the copied folder plays with
 `node out/play.js new`, no Nexus needed. That is the road to an exe (ERAVOS's Electron packaging) or an app.
 
