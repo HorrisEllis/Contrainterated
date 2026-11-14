@@ -12,11 +12,24 @@ fully tested SISO code bases that an Emerge game engine has to match, layer by l
 James, 2026-11-13: "I'm am the creative direction." · "My mentor gave it to me he said it'd be like when I used to,
 like when I was an admin on the game servers that I used to run with my brother. So I'm like an overseer or something".
 
-He is the admin of the world, not a player in it: he sets the rules, and the world cannot cheat them. Emerge already
-has that seat. Each world is a compartment, its rules are hard and soft constraints, and the hash-chained ledger is
-the admin log that cannot be faked. Players, and the AI, only send signals that the rules accept or refuse. In the
-game master, the AI proposes and the inventory guard refuses what does not exist. Games are the first kind of world;
-the direction of what comes next is his.
+He is the admin of the world, not a player in it: he sets the rules. Emerge already has that seat. Each world is a
+compartment, its rules are hard and soft constraints, and the hash-chained ledger is the admin log. Players, and the
+AI, only send signals that the rules accept or refuse. In the game master, the AI proposes and the inventory guard
+refuses what does not exist. Games are the first kind of world; the direction of what comes next is his.
+
+**What the rules do and do not stop.** In one line: *the AI can say anything, but it can only change what the rules
+allow, and the history can be checked.* That is narrower than "cannot be cheated".
+
+- Stopped: a change no rule allows (an invented item, a law broken), checked before anything changes.
+- Detected, not prevented: an edited entry in Emerge's ledger fails `ledger_verify()` afterwards. The game master's
+  PHP saves have no ledger at all.
+- Not stopped: a law nobody wrote; a bug in a rule (G1 and G2 are two known ones); the narrative, which can still
+  say "you pick up the rifle" when the rifle never lands ("the narrative plays, the state does not change"); anyone
+  with access to the files or the server.
+
+This is server-side authority: the server decides what is true. Client anti-cheat, such as Valve's VAC, Easy
+Anti-Cheat, BattlEye and Riot's Vanguard, is a different layer: it looks for cheat software on the player's own
+machine. A real game needs both; this repository covers only the first.
 
 James, 2026-11-13: "This built in emerge. Interconnected." The engine is written in Emerge, and its parts are
 interconnected. In Emerge, that is components with typed `in` and `out` hooks joined by `wire`s, and systems nested
