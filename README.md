@@ -9,37 +9,48 @@ fully tested SISO code bases that an Emerge game engine has to match, layer by l
 
 ## Play it
 
-The game is written in Emerge and runs from the repository root (`NEXUS` is your Nexus checkout):
+The game is written in Emerge and built by Emerge's own compiler, `emerge` (Nexus `emerge/emerge/lang/native/bin/emerge`,
+itself written in Emerge and built by itself). No JavaScript, no Node. James, 2026-11-14: "Do not fucking compile it
+in fucking JavaScript." · "Do not build any code outside of emerge." · "Windows".
+
+From the repository root (`EMERGE` is that compiler):
 
 ```bash
-node "$NEXUS/emerge/emerge/lang/eg.js" run engine/play.eg new
+"$EMERGE" engine/play.eg -o game
 ```
 
 ```bash
-node "$NEXUS/emerge/emerge/lang/eg.js" run engine/play.eg go corridor
+./game new
 ```
 
-Each command is one turn: `look`, `go <place>`, `take <item>`, `drop <item>`, `inventory`, `help`. A place or item
-can be typed by part of its name (`go cargo`). `new <world>` opens another world: `shall_we_play_a_game`,
-`the_matrix`, `portland_scavenger` (rooms only for now; the derelict spaceship has items, a locked bridge and a goal).
-Emerge cannot read the keyboard while a program runs yet, so a turn is one run, with the save in
-`engine/saves/current.json`, the same shape as the game master (one entry per turn, the save at the boundary).
+```bash
+./game go corridor
+```
+
+`game` is one executable, about 310 KB, with nothing to install beside it. Each command is one turn: `look`,
+`go <place>`, `take <item>`, `drop <item>`, `inventory`, `help`. A place or item can be typed by part of its name
+(`go cargo`). `new <world>` opens another world: `shall_we_play_a_game`, `the_matrix`, `portland_scavenger` (rooms
+only for now; the derelict spaceship has items, a locked bridge and a goal). A program cannot read the keyboard while
+it runs yet, so a turn is one run, with the save in `engine/saves/current.json`.
 
 Its laws are checked before anything changes: you only walk through an exit the room has; a locked room needs its
 item in your hands; you only take what is in the room (the inventory guard); you only drop what you hold.
 
-Proof, 2026-11-14: `eg test engine/turn.eg` 20/20, including a whole game from the airlock to the bridge; with the
-bridge lock removed, 19/20 (the test can fail). **It compiles to a native program, in Emerge's own compiler.** `eg native engine/play.eg -o game` writes one
-Linux x86-64 executable (about 310 KB, statically linked: no Node, no libc, no runtime to install). Built and played
-here on 2026-11-14 from `new` to the win; its save is the same file the interpreter reads, and the interpreter
-carried on from it. On a Linux server, the game is that one file plus the world files.
+**Tests, also native** (`--test` builds a program that runs a file's `test` blocks):
 
-It also compiles to JavaScript:
-`eg build engine/play.eg -o out --standalone` carries the Emerge runtime with it, and the copied folder plays with
-`node out/play.js new`, no Nexus needed. That is the road to an exe (ERAVOS's Electron packaging) or an app.
+```bash
+"$EMERGE" engine/turn.eg --test -o turn-tests && ./turn-tests
+```
 
-No AI yet: every line the game says is written in the world files. The game master's AI narration is the next layer,
-behind the same laws.
+Proof, 2026-11-14, all built by `emerge` alone: the game played from `new` to the win; `engine/turn.eg` 12/12 (a whole
+game included; with the bridge lock removed, a test fails); `engine/laws/inventory_guard.eg` 8/8; `bridge/two_worlds.eg`
+7/7.
+
+**Today it is Linux x86-64 only.** Windows is Emerge's next target (`MOD-NATIVE-WINDOWS` in `emerge/spec/cie-eg.spec`,
+`not_built`): the runtime's system calls become `kernel32` imports, `pe.eg` writes the import table, and `emerge.exe`
+rebuilds itself byte for byte. Only `kernel32` and the OS crypto library may be imported (CIE-EG section 0).
+
+No AI yet: every line the game says is written in the world files.
 
 ## Creative direction
 
