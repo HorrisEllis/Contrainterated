@@ -112,8 +112,14 @@ Companion: [`ATLAS.md`](ATLAS.md), the system atlas, written on Idearium's atlas
 contrainterated/
   README.md                       this file
   ATLAS.md                        the system atlas (Idearium template)
+  .gitignore                      engine/saves/ (a player's save is never committed)
+  engine/                         THE GAME, in Emerge (the starting point)
+    play.eg                       the boundary: reads the save, runs one turn, writes the save, prints
+    turn.eg                       one turn, pure: state + world + words in, new state + lines out; 20 tests
+    world.eg                      a world read as data: the game master's template plus an overlay
+    laws/inventory_guard.eg       the game master's inventory guard, in Emerge; 8 tests
+    worlds/derelict_spaceship.items.json   items, a locked door and the goal for the derelict spaceship
   bridge/
-    inventory_guard.eg            the first piece of the game engine in Emerge, with its tests
     two_worlds.eg                 two interconnected worlds, each with its own law, and Eravos's consent rule between them
   surfaces/
     siso-core-13.2.1/             the SISO core: Lua reference + JavaScript, PHP, Python ports, one fixture suite
