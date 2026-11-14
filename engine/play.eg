@@ -1,0 +1,44 @@
+// engine/play.eg — the boundary: the only file that touches the disk. It reads the save, runs one turn, writes the save.
+// Run from the repository root:
+//   eg run engine/play.eg new            a new game (the derelict spaceship)
+//   eg run engine/play.eg look           then any command: go <place> · take <item> · drop <item> · inventory · help
+// The save is engine/saves/current.json (not committed).
+
+use "./world.eg" as W
+use "./turn.eg" as T
+
+let WORLDS = "surfaces/game-master-5.2.0/data/worlds"
+let SAVES = "engine/saves"
+let SAVE = "{SAVES}/current.json"
+
+fn load_world(id) {
+  let base = parse_json(read_file("{WORLDS}/{id}.json"))
+  let over_path = "engine/worlds/{id}.items.json"
+  var over = null
+  if path_exists(over_path) { over = parse_json(read_file(over_path)) }
+  return W.make(base, over)
+}
+
+fn save(s) {
+  if not path_exists(SAVES) { make_dir(SAVES) }
+  write_file(SAVE, json(s))
+}
+
+let words = args()
+if len(words) > 0 and words[0] == "new" {
+  var id = "derelict_spaceship"
+  if len(words) > 1 { id = words[1] }
+  let world = load_world(id)
+  let s = T.start(world)
+  save(s)
+  print("A new game: {world.name}. {world.tone}.")
+  for line in T.turn(world, s, ["look"]).say { print(line) }
+} else if not path_exists(SAVE) {
+  print("No game yet. Start one: eg run engine/play.eg new")
+} else {
+  let s = parse_json(read_file(SAVE))
+  let world = load_world(s.world)
+  let r = T.turn(world, s, words)
+  save(r.state)
+  for line in r.say { print(line) }
+}

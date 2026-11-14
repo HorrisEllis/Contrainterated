@@ -43,7 +43,7 @@ cd surfaces/game-master-5.2.0 && php run_tests.php
 ```
 
 ```bash
-node "$NEXUS/emerge/emerge/lang/eg.js" test bridge/inventory_guard.eg
+node "$NEXUS/emerge/emerge/lang/eg.js" test engine/laws/inventory_guard.eg
 ```
 
 ```
@@ -201,7 +201,7 @@ The Emerge bridge has no spine yet: it is one pure function.
 
 | Phase | Intent | Entry condition | Exit gate | Produces |
 |---|---|---|---|---|
-| `P1` | the surface in place | the two zips | all surface suites green here; bridge 8/8 | `surfaces/`, `bridge/inventory_guard.eg`, README, this atlas |
+| `P1` | the surface in place | the two zips | all surface suites green here; bridge 8/8 | `surfaces/`, `engine/laws/inventory_guard.eg`, README, this atlas |
 | `P2` | differential runner | P1 | one command shows the bridge and the PHP gate equal on every input | `bridge/diff/` |
 | `P3` | Emerge SISO instance, L0 | P1, his answer to Q2 | 15 fixtures, 92 steps | `emerge-siso/` |
 | `P4` | L1 and L2 in Emerge | P3 | the 21 suites' pass lines | contracts and suites in Emerge |
@@ -244,13 +244,13 @@ and returns a new list; it never raises on a well-formed change.
 
 | Command | Operates on | What it does |
 |---|---|---|
-| `bridge.inventory_guard.check` | [`bridge/inventory_guard.eg`](bridge/inventory_guard.eg) | `eg check`: names, types, axioms |
-| `bridge.inventory_guard.test` | [`bridge/inventory_guard.eg`](bridge/inventory_guard.eg) | `eg test`: the 8 test blocks |
+| `bridge.inventory_guard.check` | [`engine/laws/inventory_guard.eg`](engine/laws/inventory_guard.eg) | `eg check`: names, types, axioms |
+| `bridge.inventory_guard.test` | [`engine/laws/inventory_guard.eg`](engine/laws/inventory_guard.eg) | `eg test`: the 8 test blocks |
 
 **How to use it**
 
 ```eg
-use "./bridge/inventory_guard.eg" as G
+use "./engine/laws/inventory_guard.eg" as G
 let scene = [{ id: "terminal", name: "Ship Terminal" }]
 print(G.apply_all(["flashlight"], ["add:terminal", "add:plasma_rifle"], scene, []))   // ["flashlight", "terminal"]
 ```
@@ -413,8 +413,8 @@ for t in py/sisoTests/*.test.py; do python3 -B "$t" | tail -1; done
 php run_tests.php
 GAMEMASTER_MOCK_AI=true php -S localhost:8080 router.php
 # the Emerge bridge, from the repository root
-node "$NEXUS/emerge/emerge/lang/eg.js" check bridge/inventory_guard.eg
-node "$NEXUS/emerge/emerge/lang/eg.js" test bridge/inventory_guard.eg
+node "$NEXUS/emerge/emerge/lang/eg.js" check engine/laws/inventory_guard.eg
+node "$NEXUS/emerge/emerge/lang/eg.js" test engine/laws/inventory_guard.eg
 ```
 
 ---

@@ -7,6 +7,35 @@ fully tested SISO code bases that an Emerge game engine has to match, layer by l
 > name though"). Candidates and their reasons are in [Naming](#naming). Renaming is a GitHub setting
 > (Settings → General → Repository name); GitHub redirects the old URL.
 
+## Play it
+
+The game is written in Emerge and runs from the repository root (`NEXUS` is your Nexus checkout):
+
+```bash
+node "$NEXUS/emerge/emerge/lang/eg.js" run engine/play.eg new
+```
+
+```bash
+node "$NEXUS/emerge/emerge/lang/eg.js" run engine/play.eg go corridor
+```
+
+Each command is one turn: `look`, `go <place>`, `take <item>`, `drop <item>`, `inventory`, `help`. A place or item
+can be typed by part of its name (`go cargo`). `new <world>` opens another world: `shall_we_play_a_game`,
+`the_matrix`, `portland_scavenger` (rooms only for now; the derelict spaceship has items, a locked bridge and a goal).
+Emerge cannot read the keyboard while a program runs yet, so a turn is one run, with the save in
+`engine/saves/current.json`, the same shape as the game master (one entry per turn, the save at the boundary).
+
+Its laws are checked before anything changes: you only walk through an exit the room has; a locked room needs its
+item in your hands; you only take what is in the room (the inventory guard); you only drop what you hold.
+
+Proof, 2026-11-14: `eg test engine/turn.eg` 20/20, including a whole game from the airlock to the bridge; with the
+bridge lock removed, 19/20 (the test can fail). It also compiles to JavaScript:
+`eg build engine/play.eg -o out --standalone` carries the Emerge runtime with it, and the copied folder plays with
+`node out/play.js new`, no Nexus needed. That is the road to an exe (ERAVOS's Electron packaging) or an app.
+
+No AI yet: every line the game says is written in the world files. The game master's AI narration is the next layer,
+behind the same laws.
+
 ## Creative direction
 
 James, 2026-11-13: "I'm am the creative direction." · "My mentor gave it to me he said it'd be like when I used to,
@@ -144,7 +173,8 @@ line, summed.
 | core, Python | `python3 -B py/sisoTests/<name>.test.py`, all 21 | **394/394** passed |
 | core, Lua (the reference) | `cd lua && lua5.4 sisoTests/<name>.test.lua` | **not run**: Lua 5.4 is not installed in this container and could not be installed here |
 | game master | `php run_tests.php` | **all 10 suites passed**: vendored core PHP 371/371, JS 376/376, fixtures 92/92 steps in each of PHP and JS, vendor pin 6/6, server census 37/37, client census 7/7, client scenarios 9/9, templates 4/4, scenarios 18/18 |
-| bridge | `eg test bridge/inventory_guard.eg` (Emerge 1.13.0, Nexus 0.60.514) | **8/8** passed |
+| bridge | `eg test engine/laws/inventory_guard.eg` (Emerge 1.13.0, Nexus 0.60.514) | **8/8** passed |
+| the game | `eg test engine/turn.eg` | **20/20** passed; bridge lock removed: 19/20 |
 | two worlds | `eg test bridge/two_worlds.eg` | **7/7** passed; with Fantasy's law removed 6/7, with the request wall removed 4/7 (the tests can fail) |
 | bridge vs PHP | the same 9 inventory cases through `StateUpdateGate::applyInventoryChange` by reflection | **9/9 equal** |
 
@@ -266,13 +296,13 @@ Each level is a gate an Emerge engine passes before the next one means anything.
 | **L4 scenarios** | end to end through handlers with temp files and a scripted mock AI; the client with a scripted server | `tests/scenarios.test.php` (18), `tests/client-scenarios.test.mjs` (9), `tests/templates.test.php` (4) | the same scenarios, same saves, same responses |
 | **L5 departures** | G1 (a corrupt save makes a gate throw), G2 (an AI stat key named like a reserved key makes later turns throw) | `tests/probes/`, `doc/conformance.md` | an Emerge engine either never throws on them, or records the same departure by name |
 
-`bridge/inventory_guard.eg` is the first L3 piece, for one function inside one gate.
+`engine/laws/inventory_guard.eg` is the first L3 piece, for one function inside one gate.
 
 ---
 
 ## The first bridge piece: the inventory guard in Emerge
 
-`bridge/inventory_guard.eg` is the game master's Phase 5 inventory guard (the fix for items the AI invented) written
+`engine/laws/inventory_guard.eg` is the game master's Phase 5 inventory guard (the fix for items the AI invented) written
 in Emerge, rule for rule from `StateUpdateGate::applyInventoryChange`:
 
 - `add:X` is ignored when X is already held, and kept only when X names a known entity (lowercased name, else id), is
@@ -326,11 +356,11 @@ GAMEMASTER_MOCK_AI=true php -S localhost:8080 router.php
 The Emerge bridge, from the repository root (`NEXUS` is your Nexus checkout):
 
 ```bash
-node "$NEXUS/emerge/emerge/lang/eg.js" check bridge/inventory_guard.eg
+node "$NEXUS/emerge/emerge/lang/eg.js" check engine/laws/inventory_guard.eg
 ```
 
 ```bash
-node "$NEXUS/emerge/emerge/lang/eg.js" test bridge/inventory_guard.eg
+node "$NEXUS/emerge/emerge/lang/eg.js" test engine/laws/inventory_guard.eg
 ```
 
 ---
@@ -385,7 +415,7 @@ The coder's proposal, in Nexus's phase form. Nothing below is built except P1.
 
 | Phase | depends_on | files | Exit gate |
 |---|---|---|---|
-| P1 the surface in place | `[]` | `surfaces/`, `README.md`, `ATLAS.md`, `bridge/inventory_guard.eg` | **done**: suites measured above; bridge 8/8 |
+| P1 the surface in place | `[]` | `surfaces/`, `README.md`, `ATLAS.md`, `engine/laws/inventory_guard.eg` | **done**: suites measured above; bridge 8/8 |
 | P2 differential runner | P1 | `bridge/diff/` (Emerge), a fixed list of inputs | the Emerge bridge and the PHP gate agree on every input, checked by one command |
 | P3 an Emerge SISO instance, L0 | P1, Q2 | `emerge-siso/code/`, `emerge-siso/sisoTests/fixtures.test.eg` | 15 fixtures, 92 steps, read from `surfaces/siso-core-13.2.1/fixtures/` |
 | P4 L1 and L2 in Emerge | P3 | `emerge-siso/code/contracts/`, the 21 suites | the same pass lines as JS, PHP and Python |

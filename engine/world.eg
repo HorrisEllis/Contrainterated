@@ -1,0 +1,58 @@
+// engine/world.eg — a world, read as data. Pure: it takes the parsed files and returns one world; no I/O here.
+// The base is a game master world template (zones, exits, rules, tone); the overlay adds items, locks and the goal.
+
+/** one world from a template (base) and its overlay (either may be null) */
+fn make(base, overlay) {
+  let o = overlay ?? {}
+  return {
+    id: base.id,
+    name: base.name,
+    tone: get(base, "tone", ""),
+    rules: get(base, "worldRules", []),
+    start: base.startingZone,
+    zones: base.zones,
+    items: get(o, "items", {}),
+    locks: get(o, "locks", {}),
+    goal: get(o, "goal", null)
+  }
+}
+
+/** where every item starts: { zone id: [item ids] } */
+fn placed(world) {
+  var out = {}
+  for z in keys(world.zones) { out[z] = [] }
+  for id in keys(world.items) {
+    let z = world.items[id].zone
+    if has(out, z) { out[z] = push(out[z], id) }
+  }
+  return out
+}
+
+/** a zone id from what the player typed: the id, the name, or the start of either ("cargo" → cargo_bay) */
+fn find_zone(world, choices, typed) {
+  let t = lower(trim(typed))
+  let want = replace(t, " ", "_")
+  for z in choices {
+    let name = lower(world.zones[z].name)
+    if z == want or name == t { return z }
+  }
+  for z in choices {
+    let name = lower(world.zones[z].name)
+    if len(t) > 0 and (slice(z, 0, len(want)) == want or slice(name, 0, len(t)) == t) { return z }
+  }
+  return null
+}
+
+/** an item id from what the player typed, among the ids given */
+fn find_item(world, ids, typed) {
+  let t = lower(trim(typed))
+  let want = replace(t, " ", "_")
+  for id in ids {
+    if id == want or lower(world.items[id].name) == t { return id }
+  }
+  for id in ids {
+    let name = lower(world.items[id].name)
+    if len(t) > 0 and (slice(id, 0, len(want)) == want or slice(name, 0, len(t)) == t) { return id }
+  }
+  return null
+}

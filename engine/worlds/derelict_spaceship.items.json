@@ -1,0 +1,13 @@
+{
+  "world": "derelict_spaceship",
+  "note": "The game master's world template stays as it is (surfaces/game-master-5.2.0/data/worlds/derelict_spaceship.json). This file adds what the Emerge engine needs on top: items, locked doors, the goal.",
+  "items": {
+    "flashlight": { "name": "Flashlight", "zone": "airlock", "description": "A heavy EVA flashlight. The battery indicator flickers between one bar and none." },
+    "crowbar": { "name": "Crowbar", "zone": "corridor_a", "description": "Bent at the end, as if someone already tried to force a door with it." },
+    "power_cell": { "name": "Power Cell", "zone": "cargo_bay", "description": "A fist-sized cell, still warm. The label reads BRIDGE AUX." }
+  },
+  "locks": {
+    "command_center": { "needs": "power_cell", "refused": "The bridge door is dead. Its panel has an empty slot marked BRIDGE AUX." }
+  },
+  "goal": { "zone": "command_center", "text": "You slot the power cell into the bridge door. The consoles wake one by one, and the ship's AI says your name. You made it." }
+}

@@ -1,0 +1,165 @@
+// engine/turn.eg — one turn of the game, in Emerge. Pure (SISO rule 1): state + world + words in, new state + lines out.
+// No files, no clock, no randomness: engine/play.eg is the boundary that reads the save and writes it back.
+//
+// The laws of the world, checked before anything changes (what a law does not cover, it does not stop):
+//   you only walk through an exit the zone has · a locked zone needs its item in your hands
+//   you only take what is in the zone (the game master's inventory guard, engine/laws/inventory_guard.eg) · you only drop what you hold
+
+use "./world.eg" as W
+use "./laws/inventory_guard.eg" as Guard
+
+/** a new game in a world */
+fn start(world) = { world: world.id, zone: world.start, inventory: [], placed: W.placed(world), turn: 0, won: false }
+
+fn _zone(world, s) = world.zones[s.zone]
+fn _names(world, ids) = map(ids, fn(id) = world.items[id].name)
+fn _here(s) = get(s.placed, s.zone, [])
+
+fn _look(world, s) {
+  let z = _zone(world, s)
+  var lines = ["== {z.name} ==", z.description]
+  let items = _here(s)
+  if len(items) > 0 { lines = push(lines, "You see: {join(_names(world, items), ", ")}.") }
+  let exits = map(filter(get(z, "exits", []), fn(e) = has(world.zones, e)), fn(e) = world.zones[e].name)
+  if len(exits) == 0 { return push(lines, "No exits are known from here.") }
+  return push(lines, "Exits: {join(exits, ", ")}.")
+}
+
+fn _help() = ["Commands: look · go <place> · take <item> · drop <item> · inventory · help"]
+
+fn _go(world, s, where) {
+  if s.won { return { state: s, say: ["You already made it. Start a new game to play again."] } }
+  let to = W.find_zone(world, filter(get(_zone(world, s), "exits", []), fn(e) = has(world.zones, e)), where)
+  if to == null { return { state: s, say: ["You can't go '{where}' from here."] } }
+  if has(world.locks, to) {
+    let lock = world.locks[to]
+    if index_of(s.inventory, lock.needs) < 0 { return { state: s, say: [lock.refused] } }
+  }
+  var n = clone(s)
+  n.zone = to
+  var lines = _look(world, n)
+  if world.goal != null and world.goal.zone == to {
+    n.won = true
+    lines = push(lines, world.goal.text)
+  }
+  return { state: n, say: lines }
+}
+
+fn _take(world, s, what) {
+  let here = _here(s)
+  let id = W.find_item(world, here, what)
+  // the guard decides: an item counts only if it is in this zone's scene
+  let scene = map(here, fn(i) = { id: i, name: world.items[i].name })
+  let after = Guard.apply_change(s.inventory, "add:{id ?? what}", scene, [])
+  if id == null or len(after) == len(s.inventory) { return { state: s, say: ["There is no '{what}' here to take."] } }
+  var n = clone(s)
+  n.inventory = after
+  n.placed[s.zone] = filter(here, fn(i) = i != id)
+  return { state: n, say: ["Taken: {world.items[id].name}. {world.items[id].description}"] }
+}
+
+fn _drop(world, s, what) {
+  let id = W.find_item(world, s.inventory, what)
+  if id == null { return { state: s, say: ["You aren't carrying '{what}'."] } }
+  var n = clone(s)
+  n.inventory = Guard.apply_change(s.inventory, "remove:{id}", [], [])
+  n.placed[s.zone] = push(_here(s), id)
+  return { state: n, say: ["Dropped: {world.items[id].name}."] }
+}
+
+fn _inventory(world, s) {
+  if len(s.inventory) == 0 { return ["You are carrying nothing."] }
+  return ["You carry: {join(_names(world, s.inventory), ", ")}."]
+}
+
+/** one turn: the words the player typed → { state, say } */
+fn turn(world, s, words) {
+  let ws = filter(words, fn(w) = w != "")
+  if len(ws) == 0 { return { state: s, say: _help() } }
+  let verb = lower(ws[0])
+  let rest = join(drop(ws, 1), " ")
+  var r = { state: s, say: [] }
+  if verb == "look" or verb == "l" { r = { state: s, say: _look(world, s) } }
+  else if verb == "go" or verb == "walk" { r = _go(world, s, rest) }
+  else if verb == "take" or verb == "get" { r = _take(world, s, rest) }
+  else if verb == "drop" { r = _drop(world, s, rest) }
+  else if verb == "inventory" or verb == "inv" or verb == "i" { r = { state: s, say: _inventory(world, s) } }
+  else if verb == "help" { r = { state: s, say: _help() } }
+  else { r = { state: s, say: ["I don't know '{verb}'. Type help."] } }
+  var n = clone(r.state)
+  n.turn = s.turn + 1
+  return { state: n, say: r.say }
+}
+
+// ── tests: the derelict spaceship, with its items, lock and goal ─────────────────────────────────────────────
+
+let BASE = parse_json(read_file("surfaces/game-master-5.2.0/data/worlds/derelict_spaceship.json"))
+let OVER = parse_json(read_file("engine/worlds/derelict_spaceship.items.json"))
+let WORLD = W.make(BASE, OVER)
+
+fn _play(cmds) = reduce(cmds, fn(acc, c) = turn(WORLD, acc.state, split(c, " ")), { state: start(WORLD), say: [] })
+
+test "a new game starts in the airlock with nothing" {
+  let s = start(WORLD)
+  expect s.zone == "airlock"
+  expect s.inventory == []
+  expect s.placed.airlock == ["flashlight"]
+}
+test "look shows the room, what is in it and the exits" {
+  let r = turn(WORLD, start(WORLD), ["look"])
+  expect r.say[0] == "== Airlock Chamber =="
+  expect r.say[2] == "You see: Flashlight."
+  expect r.say[3] == "Exits: Main Corridor A."
+}
+test "go by part of a name" {
+  let r = _play(["go main corridor"])
+  expect r.state.zone == "corridor_a"
+}
+test "law: no walking through walls" {
+  let r = _play(["go cargo bay"])
+  expect r.state.zone == "airlock"
+  expect r.say == ["You can't go 'cargo bay' from here."]
+}
+test "law: take only what is here" {
+  let r = _play(["take power cell"])
+  expect r.state.inventory == []
+  expect r.say == ["There is no 'power cell' here to take."]
+}
+test "take moves the item from the room to your hands" {
+  let r = _play(["take flashlight"])
+  expect r.state.inventory == ["flashlight"]
+  expect r.state.placed.airlock == []
+}
+test "drop puts it down where you stand" {
+  let r = _play(["take flashlight", "go corridor", "drop flashlight"])
+  expect r.state.inventory == []
+  expect r.state.placed.corridor_a == ["crowbar", "flashlight"]
+}
+test "law: the bridge is locked without the power cell" {
+  let r = _play(["go corridor", "go command center"])
+  expect r.state.zone == "corridor_a"
+  expect r.state.won == false
+}
+test "the whole game: find the cell, open the bridge, win" {
+  let r = _play(["go corridor", "go cargo", "take power cell", "go corridor", "go command"])
+  expect r.state.zone == "command_center"
+  expect r.state.won == true
+  expect r.say[-1] == OVER.goal.text
+  expect r.state.turn == 5
+}
+test "a turn never changes the state it was given" {
+  let s = start(WORLD)
+  let r = turn(WORLD, s, ["take", "flashlight"])
+  expect s.inventory == []
+  expect r.state.inventory == ["flashlight"]
+}
+test "a zone with no exits listed (an open world like Portland) is said, not crashed on" {
+  let open = W.make({ id: "open", name: "Open", startingZone: "here", zones: { here: { name: "Here", description: "Wide open." } } }, null)
+  let r = turn(open, start(open), ["look"])
+  expect r.say[-1] == "No exits are known from here."
+  expect turn(open, start(open), ["go", "north"]).say == ["You can't go 'north' from here."]
+}
+test "unknown words are answered, not crashed on" {
+  let r = _play(["dance"])
+  expect r.say == ["I don't know 'dance'. Type help."]
+}

@@ -1,11 +1,11 @@
-// bridge/inventory_guard.eg — the game master's Phase 5 inventory guard, written in Emerge.
+// engine/laws/inventory_guard.eg — the game master's Phase 5 inventory guard, written in Emerge.
 // Ported from surfaces/game-master-5.2.0/src/Gates/StateUpdateGate.php (applyInventoryChange), rule for rule:
 //   add:X     ignored if X is already held; kept only if X names a known entity (by lowercased name, else id),
 //             is an entity id, or is an entity changed this turn (entityChanges[].entityId). Otherwise discarded:
 //             the narrative plays, the state does not change.
 //   remove:X  removes every copy of X if X is held; otherwise ignored.
 // A pure function of its inputs (SISO Rule 1): no state, no I/O, never raises on a well-formed change.
-// Run:  node <nexus>/emerge/emerge/lang/eg.js test bridge/inventory_guard.eg
+// Run:  node <nexus>/emerge/emerge/lang/eg.js test engine/laws/inventory_guard.eg
 
 // starts_with and contains are handler-pattern words in Emerge, not functions, so two small helpers stand in.
 fn _begins(s, prefix) = len(s) >= len(prefix) and slice(s, 0, len(prefix)) == prefix
